@@ -329,6 +329,7 @@ variable "key_vault_access_policies_02" {
       key_vault                = "keyvault-coy"
       key_vault_resource_group = "ssh"
       key_vault_access_owner   = "app_service_01"
+      
       key_permissions = [
         "Get", "List",
       ]
@@ -336,17 +337,17 @@ variable "key_vault_access_policies_02" {
         "Get", "List",
       ]
     }
-    #   key_vault_access_policy_coy_vault_03 = {
-    #   key_vault                = "keyvault-coy"
-    #   key_vault_resource_group = "ssh"
-    #   key_vault_access_owner   = "app_service_02"
-    #   key_permissions = [
-    #     "Get", "List",
-    #   ]
-    #   secret_permissions = [
-    #     "Get", "List",
-    #   ]
-    # }
+      key_vault_access_policy_coy_vault_03 = {
+      key_vault                = "keyvault-coy"
+      key_vault_resource_group = "ssh"
+      key_vault_access_owner   = "app_service_02"
+      key_permissions = [
+        "Get", "List",
+      ]
+      secret_permissions = [
+        "Get", "List",
+      ]
+    }
   }
 }
 

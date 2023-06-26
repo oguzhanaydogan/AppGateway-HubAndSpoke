@@ -4,13 +4,17 @@ locals {
     app_service_02 = module.app_services["app_service_02"]
     linux_virtual_machine_01 = module.linux_virtual_machines["linux_virtual_machine_01"]
     acr_01 = module.acrs["acr_01"]
+
   }
+
+
 
   backend_address_pools = [
         {
           name = "apps-backend-pool"
           fqdns = [
             module.app_services["app_service_01"].fqdn,
+
             module.app_services["app_service_02"].fqdn
           ]
         },
