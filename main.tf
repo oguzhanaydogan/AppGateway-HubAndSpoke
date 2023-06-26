@@ -129,6 +129,17 @@ module "key_vault_access_policies" {
   key_vault_resource_group = each.value.key_vault_resource_group
   key_permissions          = each.value.key_permissions
   secret_permissions       = each.value.secret_permissions
+  object_id                = data.azurerm_client_config.current.object_id
+}
+
+module "key_vault_access_policies2" {
+  source                   = "./modules/KeyVaultAccessPolicy"
+  for_each                 = var.key_vault_access_policies_02
+  key_vault                = each.value.key_vault
+  key_vault_resource_group = each.value.key_vault_resource_group
+  key_permissions          = each.value.key_permissions
+  secret_permissions       = each.value.secret_permissions
+  object_id                = local.resources.app_service_01.object_id
 }
 
 
