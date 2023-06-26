@@ -481,6 +481,36 @@ variable "application_insights" {
   }
 }
 
+variable "role_assignments" {
+  default = {
+    app_service_01_to_acr_01 = {
+      scope = "acr_01"
+      role_owner = "app_service_01"
+      role_definition = "AcrPull"
+    }
+    app_service_02_to_acr_01 = {
+      scope = "acr_01"
+      role_owner = "app_service_02"
+      role_definition = "AcrPull"
+    }
+    linux_virtual_machine_01_to_acr_01 = {
+      scope = "acr_01"
+      role_owner = "linux_virtual_machine_01"
+      role_definition = "AcrPush"
+    }
+    linux_virtual_machine_01_to_app_service_01 = {
+      scope = "app_service_01"
+      role_owner = "linux_virtual_machine_01"
+      role_definition = "Contributor"
+    }
+    linux_virtual_machine_01_to_app_service_02 = {
+      scope = "app_service_02"
+      role_owner = "linux_virtual_machine_01"
+      role_definition = "Contributor"
+    }
+  }
+}
+
 variable "application_gateways" {
   default = {
     application_gateway_01 = {

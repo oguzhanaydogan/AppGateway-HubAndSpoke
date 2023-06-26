@@ -250,12 +250,20 @@ module "app_services" {
   }
 }
 
-module "role_assignments" {
-  source          = "./modules/RoleAssignment"
-  count           = length(local.role_assignments)
-  scope           = local.role_assignments[count.index].scope
-  principal_id    = local.role_assignments[count.index].principal_id
-  role_definition = local.role_assignments[count.index].role_definition
+# module "role_assignments" {
+#   source          = "./modules/RoleAssignment"
+#   count           = length(local.role_assignments)
+#   scope           = local.role_assignments[count.index].scope
+#   principal_id    = local.role_assignments[count.index].principal_id
+#   role_definition = local.role_assignments[count.index].role_definition
+# }
+
+module "role_assignments"{
+  source = "./modules/RoleAssignment"
+  for_each = var.role_assignments
+  scope = local.resources["${each.value.scope}"].id
+  principal_id = local.resources["${each.value.role_owner}"].principal_id
+  role_definition = each.value.role_definition
 }
 
 module "private_endpoints" {
