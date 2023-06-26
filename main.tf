@@ -307,10 +307,7 @@ module "application_gateways" {
   frontend_port_port = each.value.frontend_port_port
   frontend_ip_configuration_name = each.value.frontend_ip_configuration_name
   frontend_ip_configuration_public_ip_address_id = module.public_ip_addresses["${each.value.frontend_ip_configuration_public_ip_address}"].id
-  backend_address_pools = {
-    name = each.value.backend_address_pools[each.value.index].name
-    fqdn = each.value.backend_address_pools[each.value.index].fqdn
-  }
+  backend_address_pools = local.backend_address_pools[each.key]
   backend_http_settingses = each.value.backend_http_settingses
   probes = each.value.probes
   http_listener_frontend_port_name = each.value.http_listener_frontend_port_name
