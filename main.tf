@@ -123,7 +123,7 @@ module "key_vault_access_policies" {
   key_vault_resource_group = each.value.key_vault_resource_group
   key_permissions          = each.value.key_permissions
   secret_permissions       = each.value.secret_permissions
-  # object_id = local.resources["${each.value.key_vault_access_owner}"].object_id
+  object_id = local.resources["${each.value.key_vault_access_owner}"].object_id
 }
 
 module "key_vault_secrets" {

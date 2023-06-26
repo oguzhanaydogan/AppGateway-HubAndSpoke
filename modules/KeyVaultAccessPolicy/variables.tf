@@ -10,5 +10,5 @@ variable "key_permissions" {
 variable "secret_permissions" {  
 }
 
-# variable "object_id" {
-# }
+variable "object_id" {
+}
