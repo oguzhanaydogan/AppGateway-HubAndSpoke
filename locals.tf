@@ -7,12 +7,22 @@ locals {
   }
 
   backend_address_pools = [
-    for x in var.application_gateways: x.fqdns
+    for x in var.application_gateways: x.backend_address_pools
   ]
 
   backend_address_pools_fqdns = [
-    for b in backend_address_pools: local.resources[b].fqdn
+    for b in backend_address_pools: b.name => {
+      name = b.name
+      fqdns = [
+        for fqdn in b.fqdns : local.resources[b].fqdn
+      ]
+    }
   ]
+
+  for_each = { for pool in var.backend_address_pools : pool.name => pool }
+
+  name  = each.value.name
+  fqdns = each.value.fqdns
     
   #       {
   #         name = "apps-backend-pool"
