@@ -123,6 +123,7 @@ module "key_vault_access_policies" {
   key_vault_resource_group = each.value.key_vault_resource_group
   key_permissions          = each.value.key_permissions
   secret_permissions       = each.value.secret_permissions
+  # object_id = local.resources["${each.value.key_vault_access_owner}"].object_id
 }
 
 module "key_vault_secrets" {
@@ -258,14 +259,6 @@ module "app_services" {
 #   role_definition = local.role_assignments[count.index].role_definition
 # }
 
-module "role_assignments"{
-  source = "./modules/RoleAssignment"
-  for_each = var.role_assignments
-  scope = local.resources["${each.value.scope}"].id
-  principal_id = local.resources["${each.value.role_owner}"].principal_id
-  role_definition = each.value.role_definition
-}
-
 module "private_endpoints" {
   source                 = "./modules/privateendpoint"
   for_each               = var.private_endpoints
@@ -274,8 +267,16 @@ module "private_endpoints" {
   subnet_id              = module.subnets["${each.value.subnet}"].id
   private_dns_zone_ids   = [module.private_dns_zones["${each.value.private_dns_zone}"].id]
   attached_resource_name = each.value.attached_resource_name
-  attached_resource_id   = local.attached_resource_ids[each.value.index]
+  attached_resource_id   = local.resources[each.value.attached_resource].id
   subresource_name       = each.value.subresource_name
+}
+
+module "role_assignments"{
+  source = "./modules/RoleAssignment"
+  for_each = var.role_assignments
+  scope = local.resources["${each.value.scope}"].id
+  principal_id = local.resources["${each.value.role_owner}"].principal_id
+  role_definition = each.value.role_definition
 }
 
 module "application_gateways" {
@@ -313,149 +314,3 @@ module "application_gateways" {
   url_path_map_default_backend_address_pool_name = each.value.url_path_map_default_backend_address_pool_name
   url_path_map_path_rules = each.value.url_path_map_path_rules
 }
-
-# resource "azurerm_application_gateway" "appgw" {
-#   name                = "coy-appgateway"
-#   resource_group_name = module.resourcegroup.name
-#   location            = module.resourcegroup.location
-
-#   sku {
-#     name     = "Standard_v2"
-#     tier     = "Standard_v2"
-#     capacity = 2
-#   }
-
-#   gateway_ip_configuration {
-#     name      = "my-gateway-ip-configuration"
-#     subnet_id = module.subnets["appgateway_subnet"].id
-#   }
-
-#   frontend_port {
-#     name = "feport"
-#     port = 80
-#   }
-
-#   frontend_ip_configuration {
-#     name                 = "frontend-ip"
-#     public_ip_address_id = azurerm_public_ip.appgw_pip.id
-#   }
-
-  # backend_address_pool {
-  #   name = "apps-backend-pool"
-  #   fqdns = [module.webapp1.fqdn, module.webapp2.fqdn]
-  # }
-
-  # ##app1##
-  #   backend_address_pool {
-  #   name = "app1-backend-pool"
-  #   fqdns = [module.webapp1.fqdn]
-  # }
-
-  # ####app2####
-  # backend_address_pool {
-  #   name = "app2-backend-pool"
-  #   fqdns = [module.webapp2.fqdn]
-  # }
-
-#   ###APPS
-#   backend_http_settings {
-#     name                  = "apps-http-settings"
-#     cookie_based_affinity = "Disabled"
-#     port                  = 80
-#     protocol              = "Http"
-#     request_timeout       = 60
-#     probe_name            = "apps-probe"
-#     pick_host_name_from_backend_address = true
-#     path = "/"
-#   }
-#   probe {
-#     name                = "apps-probe"
-#     pick_host_name_from_backend_http_settings = true
-#     interval            = 30
-#     timeout             = 30
-#     unhealthy_threshold = 3
-#     protocol            = "Http"
-#     port                = 80
-#     path                = "/"
-#   }
-
-#   backend_http_settings {
-#     name                  = "app1-http-settings"
-#     cookie_based_affinity = "Disabled"
-#     port                  = 80
-#     protocol              = "Http"
-#     request_timeout       = 60
-#     probe_name            = "app1-probe"
-#     pick_host_name_from_backend_address = true
-#     path = "/"
-#   }
-#   probe {
-#     name                = "app1-probe"
-#     pick_host_name_from_backend_http_settings = true
-#     interval            = 30
-#     timeout             = 30
-#     unhealthy_threshold = 3
-#     protocol            = "Http"
-#     port                = 80
-#     path                = "/"
-#   }  
-
-
-#   backend_http_settings {
-#     name                  = "app2-http-settings"
-#     cookie_based_affinity = "Disabled"
-#     port                  = 80
-#     protocol              = "Http"
-#     request_timeout       = 60
-#     probe_name            = "app2-probe"
-#     pick_host_name_from_backend_address = true
-#     path = "/"
-#   }
-#   probe {
-#     name                = "app2-probe"
-#     pick_host_name_from_backend_http_settings = true
-#     interval            = 30
-#     timeout             = 30
-#     unhealthy_threshold = 3
-#     protocol            = "Http"
-#     port                = 80
-#     path                = "/"
-#   } 
-
-#   http_listener {
-#     name                           = "listener"
-#     frontend_ip_configuration_name = "frontend-ip"
-#     frontend_port_name             = "feport"
-#     protocol                       = "Http"
-#   }
-
-#   request_routing_rule {
-#     name                       = "rule"
-#     rule_type                  = "PathBasedRouting"
-#     http_listener_name         = "listener"
-#     backend_address_pool_name  = "apps-backend-pool"
-#     backend_http_settings_name = "apps-http-settings"    
-#     url_path_map_name = "path-map1"
-#     priority = "110"
-#   }
-
-#   url_path_map{
-#     name = "path-map1"
-#     default_backend_http_settings_name = "apps-http-settings"
-#     default_backend_address_pool_name  = "apps-backend-pool"
-#     path_rule{
-#       name = "path1"
-#       paths = ["/web"]
-#       backend_address_pool_name = "app1-backend-pool"
-#       backend_http_settings_name = "app1-http-settings"
-#     }
-#     path_rule{
-#       name = "path2"
-#       paths = ["/result"]
-#       backend_address_pool_name = "app2-backend-pool"
-#       backend_http_settings_name = "app2-http-settings"
-#     }
-#   }
-# }
-
-

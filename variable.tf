@@ -312,6 +312,7 @@ variable "key_vault_access_policies" {
     key_vault_access_policy_coy_vault = {
       key_vault                = "keyvault-coy"
       key_vault_resource_group = "ssh"
+      key_vault_access_owner   = "client_config"
       key_permissions = [
         "Get", "List",
       ]
@@ -319,6 +320,28 @@ variable "key_vault_access_policies" {
         "Get", "List",
       ]
     }
+    #   key_vault_access_policy_coy_vault_02 = {
+    #   key_vault                = "keyvault-coy"
+    #   key_vault_resource_group = "ssh"
+    #   key_vault_access_owner   = "app_service_01"
+    #   key_permissions = [
+    #     "Get", "List",
+    #   ]
+    #   secret_permissions = [
+    #     "Get", "List",
+    #   ]
+    # }
+    #   key_vault_access_policy_coy_vault_03 = {
+    #   key_vault                = "keyvault-coy"
+    #   key_vault_resource_group = "ssh"
+    #   key_vault_access_owner   = "app_service_02"
+    #   key_permissions = [
+    #     "Get", "List",
+    #   ]
+    #   secret_permissions = [
+    #     "Get", "List",
+    #   ]
+    # }
   }
 }
 
@@ -386,21 +409,24 @@ variable "private_endpoints" {
       private_dns_zone       = "private_dns_zone_acr"
       subresource_name       = "registry"
       subnet                 = "vnet_acr_subnet_acr"
-      index                  = 0
+      # index                  = 0
+      attached_resource      = "acr_01"
     }
     private_endpoint_app1 = {
       attached_resource_name = "app_service_01"
       private_dns_zone       = "private_dns_zone_app"
       subresource_name       = "sites"
       subnet                 = "vnet_app_subnet_app1endpoint"
-      index                  = 1
+      # index                  = 1
+      attached_resource      = "app_service_01"
     }
     private_endpoint_app2 = {
       attached_resource_name = "app_service_02"
       private_dns_zone       = "private_dns_zone_app"
       subresource_name       = "sites"
       subnet                 = "vnet_app_subnet_app2endpoint"
-      index                  = 2
+      # index                  = 2
+      attached_resource      = "app_service_02"
     }
   }
 }
