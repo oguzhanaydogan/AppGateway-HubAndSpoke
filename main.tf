@@ -116,6 +116,7 @@ module "app_service_plans" {
   sku_name            = each.value.sku_name
 }
 
+data "azurerm_client_config" "current" {}
 module "key_vault_access_policies" {
   source                   = "./modules/KeyVaultAccessPolicy"
   for_each                 = var.key_vault_access_policies
@@ -123,7 +124,8 @@ module "key_vault_access_policies" {
   key_vault_resource_group = each.value.key_vault_resource_group
   key_permissions          = each.value.key_permissions
   secret_permissions       = each.value.secret_permissions
-  object_id = local.resources["${each.value.key_vault_access_owner}"].object_id
+  object_id                = local.resources["${each.value.key_vault_access_owner}"].object_id
+  tenant_id                = data.azurerm_client_config.current.tenant_id
 }
 
 module "key_vault_secrets" {
