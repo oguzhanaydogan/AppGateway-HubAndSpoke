@@ -9,9 +9,3 @@ variable "key_permissions" {
 
 variable "secret_permissions" {  
 }
-
-variable "object_id" {
-}
-
-variable "tenant_id" {
-}

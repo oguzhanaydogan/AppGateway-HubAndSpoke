@@ -115,8 +115,13 @@ module "app_service_plans" {
   os_type             = each.value.os_type
   sku_name            = each.value.sku_name
 }
+data "azurerm_key_vault" "example" {
+  name                = "keyvault-coy"
+  resource_group_name = "ssh"
+}
 
 data "azurerm_client_config" "current" {}
+
 module "key_vault_access_policies" {
   source                   = "./modules/KeyVaultAccessPolicy"
   for_each                 = var.key_vault_access_policies
@@ -124,10 +129,10 @@ module "key_vault_access_policies" {
   key_vault_resource_group = each.value.key_vault_resource_group
   key_permissions          = each.value.key_permissions
   secret_permissions       = each.value.secret_permissions
-  object_id                = local.resources["${each.value.key_vault_access_owner}"].object_id
-  tenant_id                = data.azurerm_client_config.current.tenant_id
 }
 
+
+# local.resources["${each.value.key_vault_access_owner}"]
 module "key_vault_secrets" {
   source                   = "./modules/KeyVaultSecret"
   for_each                 = var.key_vault_secrets
@@ -252,14 +257,6 @@ module "app_services" {
     "WEBSITE_PULL_IMAGE_OVER_VNET"             = true
   }
 }
-
-# module "role_assignments" {
-#   source          = "./modules/RoleAssignment"
-#   count           = length(local.role_assignments)
-#   scope           = local.role_assignments[count.index].scope
-#   principal_id    = local.role_assignments[count.index].principal_id
-#   role_definition = local.role_assignments[count.index].role_definition
-# }
 
 module "private_endpoints" {
   source                 = "./modules/privateendpoint"
