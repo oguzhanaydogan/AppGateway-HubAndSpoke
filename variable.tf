@@ -2,7 +2,7 @@ variable "location" {
   default = "eastus"
 }
 
-variable "resource_group_name" {
+variable "resource_groups" {
   default = {
     resource_group_01 = {
       location = "East Us"
@@ -179,27 +179,25 @@ variable "route_tables" {
     route_table_01 = {
       name        = "route-table-01"
       subnet_name = "vnet_app_subnet_app"
+      resource_group_name = "resource_group_01"
       routes = {
         webapp-acr-allow = {
           name                   = "webapp-acr-allow"
           address_prefix         = "10.1.0.0/24"
           next_hop_type          = "VirtualAppliance"
           next_hop_in_ip_address = "10.3.1.4"
-          resource_group_name = "resource_group_01"
         }
         webapp-db-allow = {
           name                   = "webapp-db-allow"
           address_prefix         = "10.2.1.0/26"
           next_hop_type          = "VirtualAppliance"
           next_hop_in_ip_address = "10.3.1.4"
-          resource_group_name = "resource_group_01"
         }
         db-webapp-allow = {
           name                   = "db-webapp-allow"
           address_prefix         = "10.0.1.0/24"
           next_hop_type          = "VirtualAppliance"
           next_hop_in_ip_address = "10.3.1.4"
-          resource_group_name = "resource_group_01"
         }
       }
     }
@@ -598,6 +596,7 @@ variable "role_assignments" {
 variable "application_gateways" {
   default = {
     application_gateway_01 = {
+      index = 0
       name = "coy-appgateway"
       resource_group_name = "resource_group_01"
       sku_name = "Standard_v2"
@@ -641,6 +640,21 @@ variable "application_gateways" {
           path = "/"
         }
       }
+
+      backend_address_pools = [
+        {
+          name = "apps-backend-pool"
+          fqdns = ["app_service_01", "app_service_02"]
+        },
+        {
+          name = "app1-backend-pool"
+          fqdns = ["app_service_01"]
+        },
+        {
+          name = "app2-backend-pool"
+          fqdns = ["app_service_02"]
+        }
+      ]
 
       probes = {
         probe_01 = {

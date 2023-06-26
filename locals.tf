@@ -7,26 +7,33 @@ locals {
   }
 
   backend_address_pools = [
-        {
-          name = "apps-backend-pool"
-          fqdns = [
-            local.resources["app_service_01"].fqdn,
-            local.resources["app_service_02"].fqdn
-          ]
-        },
-        {
-          name = "app1-backend-pool"
-          fqdns = [
-            local.resources["app_service_01"].fqdn
-          ]
-        },
-        {
-          name = "app2-backend-pool"
-          fqdns = [
-            local.resources["app_service_02"].fqdn
-          ]
-        }
+    for x in var.application_gateways: x.fqdns
   ]
+
+  backend_address_pools_fqdns = [
+    for b in backend_address_pools: local.resources[b].fqdn
+  ]
+    
+  #       {
+  #         name = "apps-backend-pool"
+  #         fqdns = [
+  #           local.resources["app_service_01"].fqdn,
+  #           local.resources["app_service_02"].fqdn
+  #         ]
+  #       },
+  #       {
+  #         name = "app1-backend-pool"
+  #         fqdns = [
+  #           local.resources["app_service_01"].fqdn
+  #         ]
+  #       },
+  #       {
+  #         name = "app2-backend-pool"
+  #         fqdns = [
+  #           local.resources["app_service_02"].fqdn
+  #         ]
+  #       }
+
 }
 
 
