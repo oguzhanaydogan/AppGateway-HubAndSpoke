@@ -24,3 +24,14 @@ variable "private_dns_zone_id" {
 
 variable "zone" {
 }
+variable "sku_name" {
+}
+
+variable "charset" {
+}
+
+variable "collation" {
+}
+
+variable "value" {
+}

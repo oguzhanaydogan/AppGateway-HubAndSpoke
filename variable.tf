@@ -3,7 +3,12 @@ variable "location" {
 }
 
 variable "resource_group_name" {
-  default = "DemoResourceGroup"
+  default = {
+    resource_group_01 = {
+      location = "East Us"
+      name     = "CoyResourceGroup"
+    }
+  }
 }
 
 variable "virtual_networks" {
@@ -11,18 +16,22 @@ variable "virtual_networks" {
     vnet_app = {
       name          = "app-network"
       address_space = ["10.0.0.0/16"]
+      resource_group_name = "resource_group_01"
     }
     vnet_acr = {
       name          = "acr-network"
       address_space = ["10.1.0.0/16"]
+      resource_group_name = "resource_group_01"
     }
     vnet_hub = {
       name          = "hub-network"
       address_space = ["10.3.0.0/16"]
+      resource_group_name = "resource_group_01"
     }
     vnet_db = {
       name          = "db-network"
       address_space = ["10.2.0.0/16"]
+      resource_group_name = "resource_group_01"
     }
   }
 }
@@ -37,6 +46,7 @@ variable "subnets" {
       delegation           = true
       delegation_name      = "Microsoft.Web/serverFarms"
       virtual_network_name = "vnet_app"
+      resource_group_name = "resource_group_01"
     }
     vnet_app_subnet_default = {
       name                 = "default_subnet"
@@ -44,6 +54,7 @@ variable "subnets" {
       delegation           = false
       delegation_name      = ""
       virtual_network_name = "vnet_app"
+      resource_group_name = "resource_group_01"
     }
     vnet_app_subnet_appgateway = {
       name                 = "appgateway_subnet"
@@ -51,6 +62,7 @@ variable "subnets" {
       delegation           = false
       delegation_name      = ""
       virtual_network_name = "vnet_app"
+      resource_group_name = "resource_group_01"
     }
     vnet_app_subnet_app1endpoint = {
       name                 = "app1endpoint_subnet"
@@ -58,6 +70,7 @@ variable "subnets" {
       delegation           = false
       delegation_name      = ""
       virtual_network_name = "vnet_app"
+      resource_group_name = "resource_group_01"
     }
     vnet_app_subnet_app2endpoint = {
       name                 = "app2endpoint_subnet"
@@ -65,6 +78,7 @@ variable "subnets" {
       delegation           = false
       delegation_name      = ""
       virtual_network_name = "vnet_app"
+      resource_group_name = "resource_group_01"
     }
 
 
@@ -76,6 +90,7 @@ variable "subnets" {
       delegation           = false
       delegation_name      = ""
       virtual_network_name = "vnet_acr"
+      resource_group_name = "resource_group_01"
     }
 
     ### HUB VNET SUBNETS
@@ -86,6 +101,7 @@ variable "subnets" {
       delegation           = false
       delegation_name      = ""
       virtual_network_name = "vnet_hub"
+      resource_group_name = "resource_group_01"
     }
 
     vnet_hub_subnet_firewall = {
@@ -94,6 +110,7 @@ variable "subnets" {
       delegation           = false
       delegation_name      = ""
       virtual_network_name = "vnet_hub"
+      resource_group_name = "resource_group_01"
     }
 
     ### DB VNET SUBNETS
@@ -104,6 +121,7 @@ variable "subnets" {
       delegation           = true
       delegation_name      = "Microsoft.DBforMySQL/flexibleServers"
       virtual_network_name = "vnet_db"
+      resource_group_name = "resource_group_01"
     }
   }
 }
@@ -115,36 +133,42 @@ variable "vnet_peerings" {
       name                   = "db-hub"
       virtual_network        = "vnet_db"
       remote_virtual_network = "vnet_hub"
+      resource_group_name = "resource_group_01"
     }
 
     hub_to_db = {
       name                   = "hub-db"
       virtual_network        = "vnet_hub"
       remote_virtual_network = "vnet_db"
+      resource_group_name = "resource_group_01"
     }
 
     app_to_hub = {
       name                   = "app-hub"
       virtual_network        = "vnet_app"
       remote_virtual_network = "vnet_hub"
+      resource_group_name = "resource_group_01"
     }
 
     hub_to_app = {
       name                   = "hub-app"
       virtual_network        = "vnet_hub"
       remote_virtual_network = "vnet_app"
+      resource_group_name = "resource_group_01"
     }
 
     acr_to_hub = {
       name                   = "acr-hub"
       virtual_network        = "vnet_acr"
       remote_virtual_network = "vnet_hub"
+      resource_group_name = "resource_group_01"
     }
 
     hub_to_acr = {
       name                   = "hub-acr"
       virtual_network        = "vnet_hub"
       remote_virtual_network = "vnet_acr"
+      resource_group_name = "resource_group_01"
     }
   }
 }
@@ -161,18 +185,21 @@ variable "route_tables" {
           address_prefix         = "10.1.0.0/24"
           next_hop_type          = "VirtualAppliance"
           next_hop_in_ip_address = "10.3.1.4"
+          resource_group_name = "resource_group_01"
         }
         webapp-db-allow = {
           name                   = "webapp-db-allow"
           address_prefix         = "10.2.1.0/26"
           next_hop_type          = "VirtualAppliance"
           next_hop_in_ip_address = "10.3.1.4"
+          resource_group_name = "resource_group_01"
         }
         db-webapp-allow = {
           name                   = "db-webapp-allow"
           address_prefix         = "10.0.1.0/24"
           next_hop_type          = "VirtualAppliance"
           next_hop_in_ip_address = "10.3.1.4"
+          resource_group_name = "resource_group_01"
         }
       }
     }
@@ -198,16 +225,19 @@ variable "public_ip_addresses" {
       name              = "public_ip_firewall_hub"
       allocation_method = "Static"
       sku               = "Standard"
+      resource_group_name = "resource_group_01"
     }
     public_ip_app_gateway = {
       name              = "PublicFrontendIpIPv4"
       allocation_method = "Static"
       sku               = "Standard"
+      resource_group_name = "resource_group_01"
     }
     public_ip_virtual_machine_01 = {
       name              = "public-ip-vm-custom-agent"
       allocation_method = "Static"
       sku               = "Standard"
+      resource_group_name = "resource_group_01"
 
     }
   }
@@ -221,6 +251,7 @@ variable "firewalls" {
       ip_configuration_name = "configuration"
       subnet                = "vnet_hub_subnet_firewall"
       public_ip_address     = "public_ip_firewall_hub"
+      resource_group_name = "resource_group_01"
     }
   }
 }
@@ -232,6 +263,7 @@ variable "firewall_network_rule_collections" {
       firewall = "firewall_hub"
       priority = 100
       action   = "Allow"
+      resource_group_name = "resource_group_01"
       firewall_network_rules = {
         "webapp-acr-rule" = {
           source_addresses      = ["10.0.1.0/24"]
@@ -268,6 +300,7 @@ variable "app_service_plans" {
       name     = "coyphonebook"
       os_type  = "Linux"
       sku_name = "P1v2"
+      resource_group_name = "resource_group_01"
     }
   }
 }
@@ -283,6 +316,7 @@ variable "app_services" {
       mysql_database               = "mysql_database_01"
       acr                          = "acr_01"
       application_insight          = "application_insight_01"
+      resource_group_name = "resource_group_01"
     }
     app_service_02 = {
       name                         = "coywebapp-2"
@@ -292,6 +326,7 @@ variable "app_services" {
       vnet_integration_subnet      = "vnet_app_subnet_app"
       mysql_database               = "mysql_database_01"
       acr                          = "acr_01"
+      resource_group_name = "resource_group_01"
     }
   }
 }
@@ -359,6 +394,7 @@ variable "acrs" {
       admin_enabled                 = false
       public_network_access_enabled = false
       network_rule_bypass_option    = "None"
+      resource_group_name = "resource_group_01"
     }
   }
 }
@@ -369,16 +405,19 @@ variable "private_dns_zones" {
       virtual_network = "vnet_acr"
       link_name       = "link-vnet-acr"
       dns_zone_name   = "privatelink.azurecr.io"
+      resource_group_name = "resource_group_01"
     }
     private_dns_zone_app = {
       virtual_network = "vnet_app"
       link_name       = "link-vnet-app"
       dns_zone_name   = "privatelink.azurewebsites.net"
+      resource_group_name = "resource_group_01"
     }
     private_dns_zone_mysql = {
       virtual_network = "vnet_db"
       link_name       = "link-vnet-db"
       dns_zone_name   = "privatelink.mysql.database.azure.com"
+      resource_group_name = "resource_group_01"
     }
   }
 }
@@ -389,21 +428,25 @@ variable "private_dns_zone_extra_links" {
       link_name        = "private-dns-zone-acr-link-vnet-app"
       virtual_network  = "vnet_app"
       private_dns_zone = "private_dns_zone_acr"
+      resource_group_name = "resource_group_01"
     }
     private_dns_zone_acr_link_vnet_hub = {
       link_name        = "private-dns-zone-acr-link-vnet-hub"
       virtual_network  = "vnet_hub"
       private_dns_zone = "private_dns_zone_acr"
+      resource_group_name = "resource_group_01"
     }
     private_dns_zone_mysql_link_vnet_app = {
       link_name        = "private-dns-zone-mysql-link-vnet-app"
       virtual_network  = "vnet_app"
       private_dns_zone = "private_dns_zone_mysql"
+      resource_group_name = "resource_group_01"
     }
     private_dns_zone_db_link_vnet_hub = {
       link_name        = "private-dns-zone-mysql-link-vnet-hub"
       virtual_network  = "vnet_hub"
       private_dns_zone = "private_dns_zone_mysql"
+      resource_group_name = "resource_group_01"
     }
   }
 }
@@ -415,7 +458,7 @@ variable "private_endpoints" {
       private_dns_zone       = "private_dns_zone_acr"
       subresource_name       = "registry"
       subnet                 = "vnet_acr_subnet_acr"
-      # index                  = 0
+      resource_group_name = "resource_group_01"
       attached_resource      = "acr_01"
     }
     private_endpoint_app1 = {
@@ -423,7 +466,7 @@ variable "private_endpoints" {
       private_dns_zone       = "private_dns_zone_app"
       subresource_name       = "sites"
       subnet                 = "vnet_app_subnet_app1endpoint"
-      # index                  = 1
+      resource_group_name = "resource_group_01"
       attached_resource      = "app_service_01"
     }
     private_endpoint_app2 = {
@@ -431,7 +474,7 @@ variable "private_endpoints" {
       private_dns_zone       = "private_dns_zone_app"
       subresource_name       = "sites"
       subnet                 = "vnet_app_subnet_app2endpoint"
-      # index                  = 2
+      resource_group_name = "resource_group_01"
       attached_resource      = "app_service_02"
     }
   }
@@ -440,6 +483,7 @@ variable "private_endpoints" {
 variable "linux_virtual_machines" {
   default = {
     linux_virtual_machine_01 = {
+      resource_group_name = "resource_group_01"
       vm_name                                                 = "vm-custom-agent"
       vm_size                                                 = "Standard_D2s_v3"
       delete_data_disks_on_termination                        = true
@@ -473,6 +517,7 @@ variable "network_security_groups" {
   default = {
     nsg_01 = {
       name = "nsg-01"
+      resource_group_name = "resource_group_01"
       security_rules = {
         allowssh = {
           name                       = "AllowSSH"
@@ -492,7 +537,9 @@ variable "network_security_groups" {
 
 variable "mysql_databases" {
   default = {
+  
     mysql_database_01 = {
+      resource_group_name = "resource_group_01"
       server_name           = "coy-database-server2"
       db_name               = "phonebook"
       admin_username        = "coyadmin"
@@ -500,6 +547,10 @@ variable "mysql_databases" {
       delegated_subnet      = "vnet_db_subnet_db"
       private_dns_zone      = "private_dns_zone_mysql"
       zone                  = "1"
+      sku_name              = "B_Standard_B1s"
+      charset             = "utf8"
+      collation           = "utf8_unicode_ci"
+      value               = "OFF"
     }
   }
 }
@@ -509,6 +560,7 @@ variable "application_insights" {
     application_insight_01 = {
       name             = "application-insight-01"
       application_type = "web"
+      resource_group_name = "resource_group_01"
     }
   }
 }
@@ -547,6 +599,7 @@ variable "application_gateways" {
   default = {
     application_gateway_01 = {
       name = "coy-appgateway"
+      resource_group_name = "resource_group_01"
       sku_name = "Standard_v2"
       sku_tier = "Standard_v2"
       sku_capacity = 2
@@ -588,7 +641,6 @@ variable "application_gateways" {
           path = "/"
         }
       }
-
 
       probes = {
         probe_01 = {
