@@ -39,7 +39,7 @@ variable "virtual_networks" {
 variable "subnets" {
   default = {
 
-    ### APP VNET SUBNETS 
+    ### APP VNET SUBNETS
     vnet_app_subnet_app = {
       name                 = "app-subnet"
       address_prefixes     = ["10.0.1.0/24"]
@@ -173,7 +173,7 @@ variable "vnet_peerings" {
   }
 }
 
-### route tables  
+### route tables
 variable "route_tables" {
   default = {
     route_table_01 = {
@@ -362,7 +362,7 @@ variable "key_vault_access_policies_02" {
       key_vault                = "keyvault-coy"
       key_vault_resource_group = "ssh"
       key_vault_access_owner   = "app_service_01"
-      
+
       key_permissions = [
         "Get", "List",
       ]
@@ -535,7 +535,7 @@ variable "network_security_groups" {
 
 variable "mysql_databases" {
   default = {
-  
+
     mysql_database_01 = {
       resource_group_name = "resource_group_01"
       server_name           = "coy-database-server2"
@@ -644,21 +644,21 @@ variable "application_gateways" {
       backend_address_pools = [
         {
           name = "apps-backend-pool"
-          fqdns = ["app_service_01", "app_service_02"]
+          resources = ["app_service_01", "app_service_02"]
         },
         {
           name = "app1-backend-pool"
-          fqdns = ["app_service_01"]
+          resources = ["app_service_01"]
         },
         {
           name = "app2-backend-pool"
-          fqdns = ["app_service_02"]
+          resources = ["app_service_02"]
         }
       ]
 
       probes = {
         probe_01 = {
-        
+
           name                = "apps-probe"
           pick_host_name_from_backend_http_settings = true
           interval            = 30
@@ -697,7 +697,7 @@ variable "application_gateways" {
       request_routing_rule_rule_type = "PathBasedRouting"
       request_routing_rule_http_listener_name = "listener"
       request_routing_rule_backend_address_pool_name = "apps-backend-pool"
-      request_routing_rule_backend_http_settings_name = "apps-http-settings" 
+      request_routing_rule_backend_http_settings_name = "apps-http-settings"
       request_routing_rule_url_path_map_name = "path-map1"
       request_routing_rule_priority = "110"
       url_path_map_name = "path-map1"
