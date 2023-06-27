@@ -206,21 +206,11 @@ module "linux_virtual_machines" {
 }
 
 module "private_dns_zones" {
-  source             = "./modules/PrivateDnsZoneWithLink"
+  source             = "./modules/PrivateDnsZone"
   for_each           = var.private_dns_zones
-  resourcegroup      = module.resource_groups["${each.value.resource_group_name}"].name
-  virtual_network_id = module.virtual_networks["${each.value.virtual_network}"].id
-  link_name          = each.value.link_name
   name               = each.value.dns_zone_name
-}
-
-module "private_dns_zone_extra_links" {
-  source                = "./modules/PrivateDnsZoneExtraLink"
-  for_each              = var.private_dns_zone_extra_links
-  resourcegroup         = module.resource_groups["${each.value.resource_group_name}"].name
-  name                  = each.value.link_name
-  virtual_network_id    = module.virtual_networks["${each.value.virtual_network}"].id
-  private_dns_zone_name = module.private_dns_zones["${each.value.private_dns_zone}"].name
+  resourcegroup      = module.resource_groups["${each.value.resource_group_name}"].name
+  links              = local.private_dns_zone_links["${each.value.dns_zone_name}"]
 }
 
 module "mysql_databases" {
