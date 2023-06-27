@@ -16,11 +16,10 @@ variable "admin_password" {
 variable "db_name" {  
 }
 
-variable "delegated_subnet_id" {
-}
+# variable "delegated_subnet_id" {}
 
-variable "private_dns_zone_id" {
-}
+# variable "private_dns_zone_id" {
+# }
 
 variable "zone" {
 }

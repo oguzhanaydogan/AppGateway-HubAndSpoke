@@ -206,11 +206,11 @@ module "linux_virtual_machines" {
 }
 
 module "private_dns_zones" {
-  source             = "./modules/PrivateDnsZone"
-  for_each           = var.private_dns_zones
-  name               = each.value.dns_zone_name
-  resourcegroup      = module.resource_groups["${each.value.resource_group_name}"].name
-  links              = local.private_dns_zone_links["${each.value.dns_zone_name}"]
+  source        = "./modules/PrivateDnsZone"
+  for_each      = var.private_dns_zones
+  name          = each.value.dns_zone_name
+  resourcegroup = module.resource_groups["${each.value.resource_group_name}"].name
+  links         = local.private_dns_zone_links[each.key]
 }
 
 module "mysql_databases" {
@@ -222,8 +222,8 @@ module "mysql_databases" {
   db_name             = each.value.db_name
   admin_username      = each.value.admin_username
   admin_password      = module.key_vault_secrets["${each.value.admin_password_secret}"].value
-  delegated_subnet_id = module.subnets["${each.value.delegated_subnet}"].id
-  private_dns_zone_id = module.private_dns_zones["${each.value.private_dns_zone}"].id
+  # delegated_subnet_id = module.subnets["${each.value.delegated_subnet}"].id
+  # private_dns_zone_id = module.private_dns_zones["${each.value.private_dns_zone}"].id
   zone                = each.value.zone
   sku_name            = each.value.sku_name
   charset             = each.value.charset
@@ -274,45 +274,45 @@ module "private_endpoints" {
   subresource_name       = each.value.subresource_name
 }
 
-module "role_assignments"{
-  source = "./modules/RoleAssignment"
-  for_each = var.role_assignments
-  scope = local.resources["${each.value.scope}"].id
-  principal_id = local.resources["${each.value.role_owner}"].principal_id
+module "role_assignments" {
+  source          = "./modules/RoleAssignment"
+  for_each        = var.role_assignments
+  scope           = local.resources["${each.value.scope}"].id
+  principal_id    = local.resources["${each.value.role_owner}"].principal_id
   role_definition = each.value.role_definition
 }
 
 module "application_gateways" {
-  source = "./modules/ApplicationGateway"
-  for_each = var.application_gateways
-  resourcegroup = module.resource_groups["${each.value.resource_group_name}"].name
-  location            = module.resource_groups["${each.value.resource_group_name}"].location
-  name                = each.value.name
-  sku_name = each.value.sku_name
-  sku_tier = each.value.sku_tier
-  sku_capacity =each.value.sku_capacity
-  gateway_ip_configuration_name = each.value.gateway_ip_configuration_name
-  gateway_ip_configuration_subnet_id = module.subnets["${each.value.gateway_ip_configuration_subnet}"].id
-  frontend_port_name = each.value.frontend_port_name
-  frontend_port_port = each.value.frontend_port_port
-  frontend_ip_configuration_name = each.value.frontend_ip_configuration_name
-  frontend_ip_configuration_public_ip_address_id = module.public_ip_addresses["${each.value.frontend_ip_configuration_public_ip_address}"].id
-  backend_address_pools = local.backend_address_pools[each.key]
-  backend_http_settingses = each.value.backend_http_settingses
-  probes = each.value.probes
-  http_listener_frontend_port_name = each.value.http_listener_frontend_port_name
-  http_listener_name = each.value.http_listener_name
-  http_listener_frontend_ip_configuration_name = each.value.http_listener_frontend_ip_configuration_name
-  http_listener_protocol = each.value.http_listener_protocol
-  request_routing_rule_name = each.value.request_routing_rule_name
-  request_routing_rule_rule_type = each.value.request_routing_rule_rule_type
-  request_routing_rule_http_listener_name = each.value.request_routing_rule_http_listener_name
-  request_routing_rule_backend_address_pool_name = each.value.request_routing_rule_backend_address_pool_name
+  source                                          = "./modules/ApplicationGateway"
+  for_each                                        = var.application_gateways
+  resourcegroup                                   = module.resource_groups["${each.value.resource_group_name}"].name
+  location                                        = module.resource_groups["${each.value.resource_group_name}"].location
+  name                                            = each.value.name
+  sku_name                                        = each.value.sku_name
+  sku_tier                                        = each.value.sku_tier
+  sku_capacity                                    = each.value.sku_capacity
+  gateway_ip_configuration_name                   = each.value.gateway_ip_configuration_name
+  gateway_ip_configuration_subnet_id              = module.subnets["${each.value.gateway_ip_configuration_subnet}"].id
+  frontend_port_name                              = each.value.frontend_port_name
+  frontend_port_port                              = each.value.frontend_port_port
+  frontend_ip_configuration_name                  = each.value.frontend_ip_configuration_name
+  frontend_ip_configuration_public_ip_address_id  = module.public_ip_addresses["${each.value.frontend_ip_configuration_public_ip_address}"].id
+  backend_address_pools                           = local.backend_address_pools[each.key]
+  backend_http_settingses                         = each.value.backend_http_settingses
+  probes                                          = each.value.probes
+  http_listener_frontend_port_name                = each.value.http_listener_frontend_port_name
+  http_listener_name                              = each.value.http_listener_name
+  http_listener_frontend_ip_configuration_name    = each.value.http_listener_frontend_ip_configuration_name
+  http_listener_protocol                          = each.value.http_listener_protocol
+  request_routing_rule_name                       = each.value.request_routing_rule_name
+  request_routing_rule_rule_type                  = each.value.request_routing_rule_rule_type
+  request_routing_rule_http_listener_name         = each.value.request_routing_rule_http_listener_name
+  request_routing_rule_backend_address_pool_name  = each.value.request_routing_rule_backend_address_pool_name
   request_routing_rule_backend_http_settings_name = each.value.request_routing_rule_backend_http_settings_name
-  request_routing_rule_url_path_map_name = each.value.request_routing_rule_url_path_map_name
-  request_routing_rule_priority = each.value.request_routing_rule_priority
-  url_path_map_name = each.value.url_path_map_name
+  request_routing_rule_url_path_map_name          = each.value.request_routing_rule_url_path_map_name
+  request_routing_rule_priority                   = each.value.request_routing_rule_priority
+  url_path_map_name                               = each.value.url_path_map_name
   url_path_map_default_backend_http_settings_name = each.value.url_path_map_default_backend_http_settings_name
-  url_path_map_default_backend_address_pool_name = each.value.url_path_map_default_backend_address_pool_name
-  url_path_map_path_rules = each.value.url_path_map_path_rules
+  url_path_map_default_backend_address_pool_name  = each.value.url_path_map_default_backend_address_pool_name
+  url_path_map_path_rules                         = each.value.url_path_map_path_rules
 }

@@ -14,23 +14,23 @@ variable "resource_groups" {
 variable "virtual_networks" {
   default = {
     vnet_app = {
-      name          = "app-network"
-      address_space = ["10.0.0.0/16"]
+      name                = "app-network"
+      address_space       = ["10.0.0.0/16"]
       resource_group_name = "resource_group_01"
     }
     vnet_acr = {
-      name          = "acr-network"
-      address_space = ["10.1.0.0/16"]
+      name                = "acr-network"
+      address_space       = ["10.1.0.0/16"]
       resource_group_name = "resource_group_01"
     }
     vnet_hub = {
-      name          = "hub-network"
-      address_space = ["10.3.0.0/16"]
+      name                = "hub-network"
+      address_space       = ["10.3.0.0/16"]
       resource_group_name = "resource_group_01"
     }
     vnet_db = {
-      name          = "db-network"
-      address_space = ["10.2.0.0/16"]
+      name                = "db-network"
+      address_space       = ["10.2.0.0/16"]
       resource_group_name = "resource_group_01"
     }
   }
@@ -46,7 +46,7 @@ variable "subnets" {
       delegation           = true
       delegation_name      = "Microsoft.Web/serverFarms"
       virtual_network_name = "vnet_app"
-      resource_group_name = "resource_group_01"
+      resource_group_name  = "resource_group_01"
     }
     vnet_app_subnet_default = {
       name                 = "default_subnet"
@@ -54,7 +54,7 @@ variable "subnets" {
       delegation           = false
       delegation_name      = ""
       virtual_network_name = "vnet_app"
-      resource_group_name = "resource_group_01"
+      resource_group_name  = "resource_group_01"
     }
     vnet_app_subnet_appgateway = {
       name                 = "appgateway_subnet"
@@ -62,7 +62,7 @@ variable "subnets" {
       delegation           = false
       delegation_name      = ""
       virtual_network_name = "vnet_app"
-      resource_group_name = "resource_group_01"
+      resource_group_name  = "resource_group_01"
     }
     vnet_app_subnet_app1endpoint = {
       name                 = "app1endpoint_subnet"
@@ -70,7 +70,7 @@ variable "subnets" {
       delegation           = false
       delegation_name      = ""
       virtual_network_name = "vnet_app"
-      resource_group_name = "resource_group_01"
+      resource_group_name  = "resource_group_01"
     }
     vnet_app_subnet_app2endpoint = {
       name                 = "app2endpoint_subnet"
@@ -78,7 +78,7 @@ variable "subnets" {
       delegation           = false
       delegation_name      = ""
       virtual_network_name = "vnet_app"
-      resource_group_name = "resource_group_01"
+      resource_group_name  = "resource_group_01"
     }
 
 
@@ -90,7 +90,7 @@ variable "subnets" {
       delegation           = false
       delegation_name      = ""
       virtual_network_name = "vnet_acr"
-      resource_group_name = "resource_group_01"
+      resource_group_name  = "resource_group_01"
     }
 
     ### HUB VNET SUBNETS
@@ -101,7 +101,7 @@ variable "subnets" {
       delegation           = false
       delegation_name      = ""
       virtual_network_name = "vnet_hub"
-      resource_group_name = "resource_group_01"
+      resource_group_name  = "resource_group_01"
     }
 
     vnet_hub_subnet_firewall = {
@@ -110,7 +110,7 @@ variable "subnets" {
       delegation           = false
       delegation_name      = ""
       virtual_network_name = "vnet_hub"
-      resource_group_name = "resource_group_01"
+      resource_group_name  = "resource_group_01"
     }
 
     ### DB VNET SUBNETS
@@ -121,7 +121,7 @@ variable "subnets" {
       delegation           = true
       delegation_name      = "Microsoft.DBforMySQL/flexibleServers"
       virtual_network_name = "vnet_db"
-      resource_group_name = "resource_group_01"
+      resource_group_name  = "resource_group_01"
     }
   }
 }
@@ -133,42 +133,42 @@ variable "vnet_peerings" {
       name                   = "db-hub"
       virtual_network        = "vnet_db"
       remote_virtual_network = "vnet_hub"
-      resource_group_name = "resource_group_01"
+      resource_group_name    = "resource_group_01"
     }
 
     hub_to_db = {
       name                   = "hub-db"
       virtual_network        = "vnet_hub"
       remote_virtual_network = "vnet_db"
-      resource_group_name = "resource_group_01"
+      resource_group_name    = "resource_group_01"
     }
 
     app_to_hub = {
       name                   = "app-hub"
       virtual_network        = "vnet_app"
       remote_virtual_network = "vnet_hub"
-      resource_group_name = "resource_group_01"
+      resource_group_name    = "resource_group_01"
     }
 
     hub_to_app = {
       name                   = "hub-app"
       virtual_network        = "vnet_hub"
       remote_virtual_network = "vnet_app"
-      resource_group_name = "resource_group_01"
+      resource_group_name    = "resource_group_01"
     }
 
     acr_to_hub = {
       name                   = "acr-hub"
       virtual_network        = "vnet_acr"
       remote_virtual_network = "vnet_hub"
-      resource_group_name = "resource_group_01"
+      resource_group_name    = "resource_group_01"
     }
 
     hub_to_acr = {
       name                   = "hub-acr"
       virtual_network        = "vnet_hub"
       remote_virtual_network = "vnet_acr"
-      resource_group_name = "resource_group_01"
+      resource_group_name    = "resource_group_01"
     }
   }
 }
@@ -177,8 +177,8 @@ variable "vnet_peerings" {
 variable "route_tables" {
   default = {
     route_table_01 = {
-      name        = "route-table-01"
-      subnet_name = "vnet_app_subnet_app"
+      name                = "route-table-01"
+      subnet_name         = "vnet_app_subnet_app"
       resource_group_name = "resource_group_01"
       routes = {
         webapp-acr-allow = {
@@ -220,21 +220,21 @@ variable "subnet_route_table_associations" {
 variable "public_ip_addresses" {
   default = {
     public_ip_firewall_hub = {
-      name              = "public_ip_firewall_hub"
-      allocation_method = "Static"
-      sku               = "Standard"
+      name                = "public_ip_firewall_hub"
+      allocation_method   = "Static"
+      sku                 = "Standard"
       resource_group_name = "resource_group_01"
     }
     public_ip_app_gateway = {
-      name              = "PublicFrontendIpIPv4"
-      allocation_method = "Static"
-      sku               = "Standard"
+      name                = "PublicFrontendIpIPv4"
+      allocation_method   = "Static"
+      sku                 = "Standard"
       resource_group_name = "resource_group_01"
     }
     public_ip_virtual_machine_01 = {
-      name              = "public-ip-vm-custom-agent"
-      allocation_method = "Static"
-      sku               = "Standard"
+      name                = "public-ip-vm-custom-agent"
+      allocation_method   = "Static"
+      sku                 = "Standard"
       resource_group_name = "resource_group_01"
 
     }
@@ -249,7 +249,7 @@ variable "firewalls" {
       ip_configuration_name = "configuration"
       subnet                = "vnet_hub_subnet_firewall"
       public_ip_address     = "public_ip_firewall_hub"
-      resource_group_name = "resource_group_01"
+      resource_group_name   = "resource_group_01"
     }
   }
 }
@@ -257,10 +257,10 @@ variable "firewalls" {
 variable "firewall_network_rule_collections" {
   default = {
     firewall_network_rule_collection_01 = {
-      name     = "firewall_hub"
-      firewall = "firewall_hub"
-      priority = 100
-      action   = "Allow"
+      name                = "firewall_hub"
+      firewall            = "firewall_hub"
+      priority            = 100
+      action              = "Allow"
       resource_group_name = "resource_group_01"
       firewall_network_rules = {
         "webapp-acr-rule" = {
@@ -295,9 +295,9 @@ variable "firewall_network_rule_collections" {
 variable "app_service_plans" {
   default = {
     app_service_plan_coy_phonebook = {
-      name     = "coyphonebook"
-      os_type  = "Linux"
-      sku_name = "P1v2"
+      name                = "coyphonebook"
+      os_type             = "Linux"
+      sku_name            = "P1v2"
       resource_group_name = "resource_group_01"
     }
   }
@@ -314,7 +314,7 @@ variable "app_services" {
       mysql_database               = "mysql_database_01"
       acr                          = "acr_01"
       application_insight          = "application_insight_01"
-      resource_group_name = "resource_group_01"
+      resource_group_name          = "resource_group_01"
     }
     app_service_02 = {
       name                         = "coywebapp-2"
@@ -324,7 +324,7 @@ variable "app_services" {
       vnet_integration_subnet      = "vnet_app_subnet_app"
       mysql_database               = "mysql_database_01"
       acr                          = "acr_01"
-      resource_group_name = "resource_group_01"
+      resource_group_name          = "resource_group_01"
     }
   }
 }
@@ -358,7 +358,7 @@ variable "key_vault_access_policies" {
 
 variable "key_vault_access_policies_02" {
   default = {
-      key_vault_access_policy_coy_vault_02 = {
+    key_vault_access_policy_coy_vault_02 = {
       key_vault                = "keyvault-coy"
       key_vault_resource_group = "ssh"
       key_vault_access_owner   = "app_service_01"
@@ -370,7 +370,7 @@ variable "key_vault_access_policies_02" {
         "Get", "List",
       ]
     }
-      key_vault_access_policy_coy_vault_03 = {
+    key_vault_access_policy_coy_vault_03 = {
       key_vault                = "keyvault-coy"
       key_vault_resource_group = "ssh"
       key_vault_access_owner   = "app_service_02"
@@ -392,7 +392,7 @@ variable "acrs" {
       admin_enabled                 = false
       public_network_access_enabled = false
       network_rule_bypass_option    = "None"
-      resource_group_name = "resource_group_01"
+      resource_group_name           = "resource_group_01"
     }
   }
 }
@@ -400,7 +400,7 @@ variable "acrs" {
 variable "private_dns_zones" {
   default = {
     private_dns_zone_acr = {
-      dns_zone_name   = "privatelink.azurecr.io"
+      dns_zone_name       = "privatelink.azurecr.io"
       resource_group_name = "resource_group_01"
       links = {
         private_dns_zone_acr_link_vnet_acr = {
@@ -408,17 +408,17 @@ variable "private_dns_zones" {
           virtual_network = "vnet_acr"
         }
         private_dns_zone_acr_link_vnet_app = {
-          link_name        = "private-dns-zone-acr-link-vnet-app"
-          virtual_network  = "vnet_app"
+          link_name       = "private-dns-zone-acr-link-vnet-app"
+          virtual_network = "vnet_app"
         }
         private_dns_zone_acr_link_vnet_hub = {
-          link_name        = "private-dns-zone-acr-link-vnet-hub"
-          virtual_network  = "vnet_hub"
+          link_name       = "private-dns-zone-acr-link-vnet-hub"
+          virtual_network = "vnet_hub"
         }
       }
     }
     private_dns_zone_app = {
-      dns_zone_name   = "privatelink.azurewebsites.net"
+      dns_zone_name       = "privatelink.azurewebsites.net"
       resource_group_name = "resource_group_01"
       links = {
         private_dns_zone_app_link_vnet_app = {
@@ -428,7 +428,7 @@ variable "private_dns_zones" {
       }
     }
     private_dns_zone_mysql = {
-      dns_zone_name   = "privatelink.mysql.database.azure.com"
+      dns_zone_name       = "privatelink.mysql.database.azure.com"
       resource_group_name = "resource_group_01"
       links = {
         private_dns_zone_mysql_link_vnet_db = {
@@ -436,12 +436,12 @@ variable "private_dns_zones" {
           virtual_network = "vnet_db"
         }
         private_dns_zone_mysql_link_vnet_app = {
-          link_name        = "private-dns-zone-mysql-link-vnet-app"
-          virtual_network  = "vnet_app"
+          link_name       = "private-dns-zone-mysql-link-vnet-app"
+          virtual_network = "vnet_app"
         }
         private_dns_zone_mysql_link_vnet_hub = {
-          link_name        = "private-dns-zone-mysql-link-vnet-hub"
-          virtual_network  = "vnet_hub"
+          link_name       = "private-dns-zone-mysql-link-vnet-hub"
+          virtual_network = "vnet_hub"
         }
       }
     }
@@ -455,7 +455,7 @@ variable "private_endpoints" {
       private_dns_zone       = "private_dns_zone_acr"
       subresource_name       = "registry"
       subnet                 = "vnet_acr_subnet_acr"
-      resource_group_name = "resource_group_01"
+      resource_group_name    = "resource_group_01"
       attached_resource      = "acr_01"
     }
     private_endpoint_app1 = {
@@ -463,7 +463,7 @@ variable "private_endpoints" {
       private_dns_zone       = "private_dns_zone_app"
       subresource_name       = "sites"
       subnet                 = "vnet_app_subnet_app1endpoint"
-      resource_group_name = "resource_group_01"
+      resource_group_name    = "resource_group_01"
       attached_resource      = "app_service_01"
     }
     private_endpoint_app2 = {
@@ -471,7 +471,7 @@ variable "private_endpoints" {
       private_dns_zone       = "private_dns_zone_app"
       subresource_name       = "sites"
       subnet                 = "vnet_app_subnet_app2endpoint"
-      resource_group_name = "resource_group_01"
+      resource_group_name    = "resource_group_01"
       attached_resource      = "app_service_02"
     }
   }
@@ -480,7 +480,7 @@ variable "private_endpoints" {
 variable "linux_virtual_machines" {
   default = {
     linux_virtual_machine_01 = {
-      resource_group_name = "resource_group_01"
+      resource_group_name                                     = "resource_group_01"
       vm_name                                                 = "vm-custom-agent"
       vm_size                                                 = "Standard_D2s_v3"
       delete_data_disks_on_termination                        = true
@@ -513,7 +513,7 @@ variable "linux_virtual_machines" {
 variable "network_security_groups" {
   default = {
     nsg_01 = {
-      name = "nsg-01"
+      name                = "nsg-01"
       resource_group_name = "resource_group_01"
       security_rules = {
         allowssh = {
@@ -536,7 +536,7 @@ variable "mysql_databases" {
   default = {
 
     mysql_database_01 = {
-      resource_group_name = "resource_group_01"
+      resource_group_name   = "resource_group_01"
       server_name           = "coy-database-server2"
       db_name               = "phonebook"
       admin_username        = "coyadmin"
@@ -545,9 +545,9 @@ variable "mysql_databases" {
       private_dns_zone      = "private_dns_zone_mysql"
       zone                  = "1"
       sku_name              = "B_Standard_B1s"
-      charset             = "utf8"
-      collation           = "utf8_unicode_ci"
-      value               = "OFF"
+      charset               = "utf8"
+      collation             = "utf8_unicode_ci"
+      value                 = "OFF"
     }
   }
 }
@@ -555,8 +555,8 @@ variable "mysql_databases" {
 variable "application_insights" {
   default = {
     application_insight_01 = {
-      name             = "application-insight-01"
-      application_type = "web"
+      name                = "application-insight-01"
+      application_type    = "web"
       resource_group_name = "resource_group_01"
     }
   }
@@ -565,28 +565,28 @@ variable "application_insights" {
 variable "role_assignments" {
   default = {
     app_service_01_to_acr_01 = {
-      scope = "acr_01"
-      role_owner = "app_service_01"
+      scope           = "acr_01"
+      role_owner      = "app_service_01"
       role_definition = "AcrPull"
     }
     app_service_02_to_acr_01 = {
-      scope = "acr_01"
-      role_owner = "app_service_02"
+      scope           = "acr_01"
+      role_owner      = "app_service_02"
       role_definition = "AcrPull"
     }
     linux_virtual_machine_01_to_acr_01 = {
-      scope = "acr_01"
-      role_owner = "linux_virtual_machine_01"
+      scope           = "acr_01"
+      role_owner      = "linux_virtual_machine_01"
       role_definition = "AcrPush"
     }
     linux_virtual_machine_01_to_app_service_01 = {
-      scope = "app_service_01"
-      role_owner = "linux_virtual_machine_01"
+      scope           = "app_service_01"
+      role_owner      = "linux_virtual_machine_01"
       role_definition = "Contributor"
     }
     linux_virtual_machine_01_to_app_service_02 = {
-      scope = "app_service_02"
-      role_owner = "linux_virtual_machine_01"
+      scope           = "app_service_02"
+      role_owner      = "linux_virtual_machine_01"
       role_definition = "Contributor"
     }
   }
@@ -595,62 +595,62 @@ variable "role_assignments" {
 variable "application_gateways" {
   default = {
     application_gateway_01 = {
-      index = 0
-      name = "coy-appgateway"
-      resource_group_name = "resource_group_01"
-      sku_name = "Standard_v2"
-      sku_tier = "Standard_v2"
-      sku_capacity = 2
-      gateway_ip_configuration_name = "my-gateway-ip-configuration"
-      gateway_ip_configuration_subnet = "vnet_app_subnet_appgateway"
-      frontend_port_name = "feport"
-      frontend_port_port = 80
-      frontend_ip_configuration_name = "frontend-ip"
+      index                                       = 0
+      name                                        = "coy-appgateway"
+      resource_group_name                         = "resource_group_01"
+      sku_name                                    = "Standard_v2"
+      sku_tier                                    = "Standard_v2"
+      sku_capacity                                = 2
+      gateway_ip_configuration_name               = "my-gateway-ip-configuration"
+      gateway_ip_configuration_subnet             = "vnet_app_subnet_appgateway"
+      frontend_port_name                          = "feport"
+      frontend_port_port                          = 80
+      frontend_ip_configuration_name              = "frontend-ip"
       frontend_ip_configuration_public_ip_address = "public_ip_app_gateway"
       backend_http_settingses = {
         backend_http_setting_01 = {
-          name                  = "apps-http-settings"
-          cookie_based_affinity = "Disabled"
-          port                  = 80
-          protocol              = "Http"
-          request_timeout       = 60
-          probe_name            = "apps-probe"
+          name                                = "apps-http-settings"
+          cookie_based_affinity               = "Disabled"
+          port                                = 80
+          protocol                            = "Http"
+          request_timeout                     = 60
+          probe_name                          = "apps-probe"
           pick_host_name_from_backend_address = true
-          path = "/"
+          path                                = "/"
         }
         backend_http_setting_02 = {
-          name                  = "app1-http-settings"
-          cookie_based_affinity = "Disabled"
-          port                  = 80
-          protocol              = "Http"
-          request_timeout       = 60
-          probe_name            = "app1-probe"
+          name                                = "app1-http-settings"
+          cookie_based_affinity               = "Disabled"
+          port                                = 80
+          protocol                            = "Http"
+          request_timeout                     = 60
+          probe_name                          = "app1-probe"
           pick_host_name_from_backend_address = true
-          path = "/"
+          path                                = "/"
         }
         backend_http_setting_03 = {
-          name                  = "app2-http-settings"
-          cookie_based_affinity = "Disabled"
-          port                  = 80
-          protocol              = "Http"
-          request_timeout       = 60
-          probe_name            = "app2-probe"
+          name                                = "app2-http-settings"
+          cookie_based_affinity               = "Disabled"
+          port                                = 80
+          protocol                            = "Http"
+          request_timeout                     = 60
+          probe_name                          = "app2-probe"
           pick_host_name_from_backend_address = true
-          path = "/"
+          path                                = "/"
         }
       }
 
       backend_address_pools = [
         {
-          name = "apps-backend-pool"
+          name      = "apps-backend-pool"
           resources = ["app_service_01", "app_service_02"]
         },
         {
-          name = "app1-backend-pool"
+          name      = "app1-backend-pool"
           resources = ["app_service_01"]
         },
         {
-          name = "app2-backend-pool"
+          name      = "app2-backend-pool"
           resources = ["app_service_02"]
         }
       ]
@@ -658,61 +658,61 @@ variable "application_gateways" {
       probes = {
         probe_01 = {
 
-          name                = "apps-probe"
+          name                                      = "apps-probe"
           pick_host_name_from_backend_http_settings = true
-          interval            = 30
-          timeout             = 30
-          unhealthy_threshold = 3
-          protocol            = "Http"
-          port                = 80
-          path                = "/"
+          interval                                  = 30
+          timeout                                   = 30
+          unhealthy_threshold                       = 3
+          protocol                                  = "Http"
+          port                                      = 80
+          path                                      = "/"
         }
         probe_02 = {
-          name                = "app1-probe"
+          name                                      = "app1-probe"
           pick_host_name_from_backend_http_settings = true
-          interval            = 30
-          timeout             = 30
-          unhealthy_threshold = 3
-          protocol            = "Http"
-          port                = 80
-          path                = "/"
+          interval                                  = 30
+          timeout                                   = 30
+          unhealthy_threshold                       = 3
+          protocol                                  = "Http"
+          port                                      = 80
+          path                                      = "/"
         }
         probe_03 = {
-          name                = "app2-probe"
+          name                                      = "app2-probe"
           pick_host_name_from_backend_http_settings = true
-          interval            = 30
-          timeout             = 30
-          unhealthy_threshold = 3
-          protocol            = "Http"
-          port                = 80
-          path                = "/"
+          interval                                  = 30
+          timeout                                   = 30
+          unhealthy_threshold                       = 3
+          protocol                                  = "Http"
+          port                                      = 80
+          path                                      = "/"
         }
       }
-      http_listener_frontend_port_name = "feport"
-      http_listener_name = "listener"
-      http_listener_frontend_ip_configuration_name = "frontend-ip"
-      http_listener_protocol = "Http"
-      request_routing_rule_name = "rule"
-      request_routing_rule_rule_type = "PathBasedRouting"
-      request_routing_rule_http_listener_name = "listener"
-      request_routing_rule_backend_address_pool_name = "apps-backend-pool"
+      http_listener_frontend_port_name                = "feport"
+      http_listener_name                              = "listener"
+      http_listener_frontend_ip_configuration_name    = "frontend-ip"
+      http_listener_protocol                          = "Http"
+      request_routing_rule_name                       = "rule"
+      request_routing_rule_rule_type                  = "PathBasedRouting"
+      request_routing_rule_http_listener_name         = "listener"
+      request_routing_rule_backend_address_pool_name  = "apps-backend-pool"
       request_routing_rule_backend_http_settings_name = "apps-http-settings"
-      request_routing_rule_url_path_map_name = "path-map1"
-      request_routing_rule_priority = "110"
-      url_path_map_name = "path-map1"
+      request_routing_rule_url_path_map_name          = "path-map1"
+      request_routing_rule_priority                   = "110"
+      url_path_map_name                               = "path-map1"
       url_path_map_default_backend_http_settings_name = "apps-http-settings"
-      url_path_map_default_backend_address_pool_name = "apps-backend-pool"
+      url_path_map_default_backend_address_pool_name  = "apps-backend-pool"
       url_path_map_path_rules = {
         path_rule_01 = {
-          name = "path1"
-          paths = ["/web"]
-          backend_address_pool_name = "app1-backend-pool"
+          name                       = "path1"
+          paths                      = ["/web"]
+          backend_address_pool_name  = "app1-backend-pool"
           backend_http_settings_name = "app1-http-settings"
         }
         path_rule_02 = {
-          name = "path2"
-          paths = ["/result"]
-          backend_address_pool_name = "app2-backend-pool"
+          name                       = "path2"
+          paths                      = ["/result"]
+          backend_address_pool_name  = "app2-backend-pool"
           backend_http_settings_name = "app2-http-settings"
         }
       }
