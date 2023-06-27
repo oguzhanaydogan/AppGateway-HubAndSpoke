@@ -402,48 +402,48 @@ variable "private_dns_zones" {
     private_dns_zone_acr = {
       dns_zone_name       = "privatelink.azurecr.io"
       resource_group_name = "resource_group_01"
-      links = {
-        private_dns_zone_acr_link_vnet_acr = {
+      links = [
+        {
           link_name       = "private-dns-zone-acr-link-vnet-acr"
           virtual_network = "vnet_acr"
-        }
-        private_dns_zone_acr_link_vnet_app = {
+        },
+        {
           link_name       = "private-dns-zone-acr-link-vnet-app"
           virtual_network = "vnet_app"
-        }
-        private_dns_zone_acr_link_vnet_hub = {
+        },
+        {
           link_name       = "private-dns-zone-acr-link-vnet-hub"
           virtual_network = "vnet_hub"
         }
-      }
+      ]
     }
     private_dns_zone_app = {
       dns_zone_name       = "privatelink.azurewebsites.net"
       resource_group_name = "resource_group_01"
-      links = {
-        private_dns_zone_app_link_vnet_app = {
+      links = [
+        {
           link_name       = "private-dns-zone-app-link-vnet-app"
           virtual_network = "vnet_app"
         }
-      }
+      ]
     }
     private_dns_zone_mysql = {
       dns_zone_name       = "privatelink.mysql.database.azure.com"
       resource_group_name = "resource_group_01"
-      links = {
-        private_dns_zone_mysql_link_vnet_db = {
+      links = [
+        {
           link_name       = "private-dns-zone-mysql-link-vnet-db"
           virtual_network = "vnet_db"
-        }
-        private_dns_zone_mysql_link_vnet_app = {
+        },
+        {
           link_name       = "private-dns-zone-mysql-link-vnet-app"
           virtual_network = "vnet_app"
-        }
-        private_dns_zone_mysql_link_vnet_hub = {
+        },
+        {
           link_name       = "private-dns-zone-mysql-link-vnet-hub"
           virtual_network = "vnet_hub"
         }
-      }
+      ]
     }
   }
 }
