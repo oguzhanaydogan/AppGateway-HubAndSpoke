@@ -206,12 +206,30 @@ module "linux_virtual_machines" {
 }
 
 module "private_dns_zones" {
-  source        = "./modules/PrivateDnsZone"
-  for_each      = var.private_dns_zones
-  name          = each.value.dns_zone_name
+  source = "./modules/PrivateDnsZone"
+  for_each = var.private_dns_zones
   resourcegroup = module.resource_groups["${each.value.resource_group_name}"].name
-  links         = local.private_dns_zone_links[each.key]
+  name = each.value.dns_zone_name
+  link_name = each.value.link_name
+  virtual_network_id = module.virtual_networks["${each.value.virtual_network}"].id
 }
+
+module "private_dns_zone_extra_links" {
+  source                = "./modules/PrivateDnsZoneExtraLink"
+  for_each              = var.private_dns_zone_extra_links
+  resourcegroup         = module.resource_groups["${each.value.resource_group_name}"].name
+  link_name             = each.value.link_name
+  virtual_network_id    = module.virtual_networks["${each.value.virtual_network}"].id
+  private_dns_zone_name = each.value.private_dns_zone
+}
+
+# module "private_dns_zones" {
+#   source        = "./modules/PrivateDnsZone"
+#   for_each      = var.private_dns_zones
+#   name          = each.value.dns_zone_name
+#   resourcegroup = module.resource_groups["${each.value.resource_group_name}"].name
+#   links         = local.private_dns_zone_links[each.key]
+# }
 
 module "mysql_databases" {
   source              = "./modules/MySql"
@@ -222,8 +240,8 @@ module "mysql_databases" {
   db_name             = each.value.db_name
   admin_username      = each.value.admin_username
   admin_password      = module.key_vault_secrets["${each.value.admin_password_secret}"].value
-  # delegated_subnet_id = module.subnets["${each.value.delegated_subnet}"].id
-  # private_dns_zone_id = module.private_dns_zones["${each.value.private_dns_zone}"].id
+  delegated_subnet_id = module.subnets["${each.value.delegated_subnet}"].id
+  private_dns_zone_id = module.private_dns_zones["${each.value.private_dns_zone}"].id
   zone                = each.value.zone
   sku_name            = each.value.sku_name
   charset             = each.value.charset

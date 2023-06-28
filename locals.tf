@@ -10,16 +10,16 @@ locals {
     vnet_db                  = module.virtual_networks["vnet_db"]
   }
 
-  private_dns_zone_links = {
-    for k, v in var.private_dns_zones : k => [
-      for link in v.links : {
-        name               = link.link_name
-        virtual_network_id = local.resources[link.virtual_network].id
-      }
-    ]
-  }
-
-  backend_address_pools = {
+  #   private_dns_zone_links = {
+  #   for k, v in var.private_dns_zones : k => [
+  #     for link in v.links : {
+  #       name               = link.link_name
+  #       virtual_network_id = local.resources[link.virtual_network].id
+  #     }
+  #   ]
+  # }
+  
+    backend_address_pools = {
     for k, v in var.application_gateways : k => [
       for pool in v.backend_address_pools : {
         name = pool.name
