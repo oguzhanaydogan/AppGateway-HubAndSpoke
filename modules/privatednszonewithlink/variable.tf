@@ -4,8 +4,8 @@ variable "name" {
 variable "resourcegroup" {
 }
 
-variable "link_name" {
-}
+# variable "link_name" {
+# }
 
-variable "virtual_network_id" {
-}
+# variable "virtual_network_id" {
+# }

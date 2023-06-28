@@ -210,7 +210,7 @@ module "private_dns_zones" {
   for_each           = var.private_dns_zones
   resourcegroup      = module.resource_groups["${each.value.resource_group_name}"].name
   virtual_network_id = module.virtual_networks["${each.value.virtual_network}"].id
-  link_name          = each.value.link_name
+  # link_name          = each.value.link_name
   name               = each.value.dns_zone_name
 }
 
