@@ -11,12 +11,9 @@ locals {
   }
 
   private_dns_zone_links = {
-    for k, v in var.private_dns_zones : k => [
-      for link in v.links : {
-        name               = link.link_name
-        virtual_network_id = local.resources[link.virtual_network].id
-      }
-    ]
+    for k, v in var.private_dns_zones : k => {
+      for link in v.links : link.link_name => local.resources[link.virtual_network].id
+    }
   }
 
 
