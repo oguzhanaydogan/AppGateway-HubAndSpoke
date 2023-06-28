@@ -19,6 +19,7 @@ locals {
     ]
   }
 
+
   backend_address_pools = {
     for k, v in var.application_gateways : k => [
       for pool in v.backend_address_pools : {
@@ -30,6 +31,3 @@ locals {
     ]
   }
 }
-
-
-
