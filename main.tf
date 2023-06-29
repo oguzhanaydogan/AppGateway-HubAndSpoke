@@ -222,7 +222,7 @@ module "mysql_databases" {
   db_name             = each.value.db_name
   admin_username      = each.value.admin_username
   admin_password      = module.key_vault_secrets["${each.value.admin_password_secret}"].value
-  # delegated_subnet_id = module.subnets["${each.value.delegated_subnet}"].id
+  delegated_subnet_id = module.subnets["${each.value.delegated_subnet}"].id
   # private_dns_zone_id = module.private_dns_zones["${each.value.private_dns_zone}"].id
   zone                = each.value.zone
   sku_name            = each.value.sku_name

@@ -542,7 +542,7 @@ variable "mysql_databases" {
       admin_username        = "coyadmin"
       admin_password_secret = "key_vault_secret_mysql_password"
       delegated_subnet      = "vnet_db_subnet_db"
-      private_dns_zone      = "private_dns_zone_mysql"
+      # private_dns_zone      = "private_dns_zone_mysql"
       zone                  = "1"
       sku_name              = "B_Standard_B1s"
       charset               = "utf8"
