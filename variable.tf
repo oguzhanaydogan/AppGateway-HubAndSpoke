@@ -178,54 +178,47 @@ variable "route_tables" {
   default = {
     route_table_01 = {
       name                = "route-table-01"
-      # subnet_name         = "vnet_app_subnet_app"
       resource_group_name = "resource_group_01"
       routes = {
-        webapp-acr-allow = {
-          name                   = "webapp-acr-allow"
+        acr-allow = {
+          name                   = "acr-allow"
           address_prefix         = "10.1.0.0/24"
           next_hop_type          = "VirtualAppliance"
           next_hop_in_ip_address = "10.3.1.4"
         }
-        webapp-db-allow = {
-          name                   = "webapp-db-allow"
+        db-allow = {
+          name                   = "db-allow"
           address_prefix         = "10.2.1.0/26"
           next_hop_type          = "VirtualAppliance"
           next_hop_in_ip_address = "10.3.1.4"
         }
-        db-webapp-allow = {
-          name                   = "db-webapp-allow"
+        webapp-allow = {
+          name                   = "webapp-allow"
           address_prefix         = "10.0.1.0/24"
           next_hop_type          = "VirtualAppliance"
           next_hop_in_ip_address = "10.3.1.4"
         }
       }
-      route_table_associations = [
-        {
-          subnet      = "vnet_acr_subnet_acr"
-          route_table = "route_table_01"
-        },
-        {
-          subnet      = "vnet_db_subnet_db"
-          route_table = "route_table_01"
-        }
-      ]
     }
   }
 }
 
-# variable "subnet_route_table_associations" {
-#   default = {
-#     route_01_vnet_acr_subnet_acr = {
-#       subnet      = "vnet_acr_subnet_acr"
-#       route_table = "route_table_01"
-#     }
-    # route_01_vnet_db_subnet_db = {
-    #   subnet      = "vnet_db_subnet_db"
-    #   route_table = "route_table_01"
-    # }
-#   }
-# }
+variable "route_table_associations" {
+  default = {
+    vnet_app_subnet_app_01 = {
+      subnet      = "vnet_app_subnet_app"
+      route_table = "route_table_01"
+    }
+    vnet_acr_subnet_acr_01 = {
+      subnet      = "vnet_acr_subnet_acr"
+      route_table = "route_table_01"
+    }
+    vnet_db_subnet_db_01 = {
+      subnet      = "vnet_db_subnet_db"
+      route_table = "route_table_01"
+    }
+  }
+}
 
 variable "public_ip_addresses" {
   default = {
@@ -412,48 +405,54 @@ variable "private_dns_zones" {
     private_dns_zone_acr = {
       dns_zone_name       = "privatelink.azurecr.io"
       resource_group_name = "resource_group_01"
-      links = [
-        {
-          link_name       = "private-dns-zone-acr-link-vnet-acr"
-          virtual_network = "vnet_acr"
-        },
-        {
-          link_name       = "private-dns-zone-acr-link-vnet-app"
-          virtual_network = "vnet_app"
-        },
-        {
-          link_name       = "private-dns-zone-acr-link-vnet-hub"
-          virtual_network = "vnet_hub"
-        }
-      ]
     }
     private_dns_zone_app = {
       dns_zone_name       = "privatelink.azurewebsites.net"
       resource_group_name = "resource_group_01"
-      links = [
-        {
-          link_name       = "private-dns-zone-app-link-vnet-app"
-          virtual_network = "vnet_app"
-        }
-      ]
     }
     private_dns_zone_mysql = {
       dns_zone_name       = "privatelink.mysql.database.azure.com"
       resource_group_name = "resource_group_01"
-      links = [
-        {
-          link_name       = "private-dns-zone-mysql-link-vnet-db"
-          virtual_network = "vnet_db"
-        },
-        {
-          link_name       = "private-dns-zone-mysql-link-vnet-app"
-          virtual_network = "vnet_app"
-        },
-        {
-          link_name       = "private-dns-zone-mysql-link-vnet-hub"
-          virtual_network = "vnet_hub"
-        }
-      ]
+    }
+  }
+}
+
+variable "private_dns_zones_virtual_network_links" {
+  default = {
+    private-dns-zone-acr-link-vnet-acr = {
+      private_dns_zone_name       = "private_dns_zone_acr"
+      resource_group_name = "resource_group_01"
+      virtual_network = "vnet_acr"
+    }
+    private-dns-zone-acr-link-vnet-app = {
+      private_dns_zone_name       = "private_dns_zone_acr"
+      resource_group_name = "resource_group_01"
+      virtual_network = "vnet_app"
+    }
+    private-dns-zone-acr-link-vnet-hub = {
+      private_dns_zone_name      = "private_dns_zone_acr"
+      resource_group_name = "resource_group_01"
+      virtual_network = "vnet_hub"
+    }
+    private-dns-zone-app-link-vnet-app = {
+      private_dns_zone_name      = "private_dns_zone_app"
+      resource_group_name = "resource_group_01"
+      virtual_network = "vnet_app"
+    }
+    private-dns-zone-mysql-link-vnet-db = {
+      private_dns_zone_name      = "private_dns_zone_mysql"
+      resource_group_name = "resource_group_01"
+      virtual_network = "vnet_db"
+    }
+    private-dns-zone-mysql-link-vnet-app = {
+      private_dns_zone_name       = "private_dns_zone_mysql"
+      resource_group_name = "resource_group_01"
+      virtual_network = "vnet_app"
+    }
+    private-dns-zone-mysql-link-vnet-hub = {
+      private_dns_zone_name       = "private_dns_zone_mysql"
+      resource_group_name = "resource_group_01"
+      virtual_network = "vnet_hub"
     }
   }
 }
@@ -552,7 +551,7 @@ variable "mysql_databases" {
       admin_username        = "coyadmin"
       admin_password_secret = "key_vault_secret_mysql_password"
       delegated_subnet      = "vnet_db_subnet_db"
-      # private_dns_zone      = "private_dns_zone_mysql"
+      private_dns_zone      = "private_dns_zone_mysql"
       zone                  = "1"
       sku_name              = "B_Standard_B1s"
       charset               = "utf8"
