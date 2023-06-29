@@ -6,12 +6,12 @@ terraform {
     }
   }
 
-  # backend "azurerm" {
-  #   resource_group_name  = "coy-backend"
-  #   storage_account_name = "coystorage"
-  #   container_name       = "terraformstate"
-  #   key                  = "terraform.tfstate"
-  # }
+  backend "azurerm" {
+    resource_group_name  = "coy-backend"
+    storage_account_name = "coystorage"
+    container_name       = "terraformstate"
+    key                  = "terraform.tfstate"
+  }
 }
 
 provider "azurerm" {
