@@ -178,7 +178,7 @@ variable "route_tables" {
   default = {
     route_table_01 = {
       name                = "route-table-01"
-      subnet_name         = "vnet_app_subnet_app"
+      # subnet_name         = "vnet_app_subnet_app"
       resource_group_name = "resource_group_01"
       routes = {
         webapp-acr-allow = {
@@ -200,22 +200,32 @@ variable "route_tables" {
           next_hop_in_ip_address = "10.3.1.4"
         }
       }
+      route_table_associations = [
+        {
+          subnet      = "vnet_acr_subnet_acr"
+          route_table = "route_table_01"
+        },
+        {
+          subnet      = "vnet_db_subnet_db"
+          route_table = "route_table_01"
+        }
+      ]
     }
   }
 }
 
-variable "subnet_route_table_associations" {
-  default = {
-    route_01_vnet_acr_subnet_acr = {
-      subnet      = "vnet_acr_subnet_acr"
-      route_table = "route_table_01"
-    }
-    route_01_vnet_db_subnet_db = {
-      subnet      = "vnet_db_subnet_db"
-      route_table = "route_table_01"
-    }
-  }
-}
+# variable "subnet_route_table_associations" {
+#   default = {
+#     route_01_vnet_acr_subnet_acr = {
+#       subnet      = "vnet_acr_subnet_acr"
+#       route_table = "route_table_01"
+#     }
+    # route_01_vnet_db_subnet_db = {
+    #   subnet      = "vnet_db_subnet_db"
+    #   route_table = "route_table_01"
+    # }
+#   }
+# }
 
 variable "public_ip_addresses" {
   default = {

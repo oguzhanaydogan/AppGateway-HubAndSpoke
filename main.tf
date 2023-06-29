@@ -64,16 +64,17 @@ module "route_tables" {
   resource_group_name = module.resource_groups["${each.value.resource_group_name}"].name
   location            = module.resource_groups["${each.value.resource_group_name}"].location
   name                = each.value.name
+  route_table_associations = local.route_table_associations[each.key]
   route               = each.value.routes
-  subnet_id           = module.subnets["${each.value.subnet_name}"].id
+  # subnet_id           = module.subnets["${each.value.subnet_name}"].id
 }
 
-module "subnet_route_table_associations" {
-  source         = "./modules/RouteTableExtraAssociation"
-  for_each       = var.subnet_route_table_associations
-  subnet_id      = module.subnets["${each.value.subnet}"].id
-  route_table_id = module.route_tables["${each.value.route_table}"].id
-}
+# module "subnet_route_table_associations" {
+#   source         = "./modules/RouteTableExtraAssociation"
+#   for_each       = var.subnet_route_table_associations
+#   subnet_id      = module.subnets["${each.value.subnet}"].id
+#   route_table_id = module.route_tables["${each.value.route_table}"].id
+# }
 
 module "public_ip_addresses" {
   source              = "./modules/PublicIPAddress"
