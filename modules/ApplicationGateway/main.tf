@@ -27,8 +27,8 @@ resource "azurerm_application_gateway" "appgw" {
   dynamic "backend_address_pool" {
     for_each = var.backend_address_pools
     content {
-        name = backend_address_pool.value.name
-        fqdns = backend_address_pool.value.fqdns
+        name = backend_address_pool.key
+        fqdns = backend_address_pool.value
     }
   }
   ###APPS

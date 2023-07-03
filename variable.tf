@@ -176,25 +176,48 @@ variable "vnet_peerings" {
 ### route tables
 variable "route_tables" {
   default = {
-    route_table_01 = {
-      name                = "route-table-01"
-      subnet_name         = "vnet_app_subnet_app"
+    route_table_subnet_app = {
+      name                = "route-table-subnet-app"
       resource_group_name = "resource_group_01"
       routes = {
-        webapp-acr-allow = {
-          name                   = "webapp-acr-allow"
+        route_for_subnet_acr = {
+          name                   = "route-for-subnet-acr"
           address_prefix         = "10.1.0.0/24"
           next_hop_type          = "VirtualAppliance"
           next_hop_in_ip_address = "10.3.1.4"
         }
-        webapp-db-allow = {
-          name                   = "webapp-db-allow"
+        route_for_subnet_db = {
+          name                   = "route-for-subnet-db"
           address_prefix         = "10.2.1.0/26"
           next_hop_type          = "VirtualAppliance"
           next_hop_in_ip_address = "10.3.1.4"
         }
-        db-webapp-allow = {
-          name                   = "db-webapp-allow"
+      }
+    }
+    route_table_subnet_db  = {
+      name                = "route-table-subnet-db"
+      resource_group_name = "resource_group_01"
+      routes = {
+        route_for_subnet_app = {
+          name                   = "route-for-subnet-app"
+          address_prefix         = "10.0.1.0/24"
+          next_hop_type          = "VirtualAppliance"
+          next_hop_in_ip_address = "10.3.1.4"
+        }
+      }
+    }
+    route_table_subnet_acr  = {
+      name                = "route-table-subnet-acr"
+      resource_group_name = "resource_group_01"
+      routes = {
+        route_for_subnet_db = {
+          name                   = "route-for-subnet-db"
+          address_prefix         = "10.2.1.0/26"
+          next_hop_type          = "VirtualAppliance"
+          next_hop_in_ip_address = "10.3.1.4"
+        }
+        route_for_subnet_app = {
+          name                   = "route-for-subnet-app"
           address_prefix         = "10.0.1.0/24"
           next_hop_type          = "VirtualAppliance"
           next_hop_in_ip_address = "10.3.1.4"
@@ -204,15 +227,19 @@ variable "route_tables" {
   }
 }
 
-variable "subnet_route_table_associations" {
+variable "route_table_associations" {
   default = {
-    route_01_vnet_acr_subnet_acr = {
-      subnet      = "vnet_acr_subnet_acr"
-      route_table = "route_table_01"
+    vnet_app_subnet_app_01 = {
+      subnet      = "vnet_app_subnet_app"
+      route_table = "route_table_subnet_app"
     }
-    route_01_vnet_db_subnet_db = {
+    vnet_acr_subnet_acr_01 = {
+      subnet      = "vnet_acr_subnet_acr"
+      route_table = "route_table_subnet_acr"
+    }
+    vnet_db_subnet_db_01 = {
       subnet      = "vnet_db_subnet_db"
-      route_table = "route_table_01"
+      route_table = "route_table_subnet_db"
     }
   }
 }
@@ -273,12 +300,6 @@ variable "firewall_network_rule_collections" {
           source_addresses      = ["10.0.1.0/24"]
           destination_ports     = ["*"]
           destination_addresses = ["10.2.1.0/26"]
-          protocols             = ["Any"]
-        }
-        "customagent-acr-rule" = {
-          source_addresses      = ["10.1.0.4/32"]
-          destination_ports     = ["*"]
-          destination_addresses = ["10.1.0.0/24"]
           protocols             = ["Any"]
         }
         "acr-webapp-rule" = {
@@ -400,108 +421,59 @@ variable "acrs" {
 variable "private_dns_zones" {
   default = {
     private_dns_zone_acr = {
+      dns_zone_name       = "privatelink.azurecr.io"
       resource_group_name = "resource_group_01"
-      dns_zone_name = "privatelink.azurecr.io"
-      link_name = "private-dns-zone-acr-link-vnet-acr"
-      virtual_network = "vnet_acr"
     }
     private_dns_zone_app = {
       dns_zone_name       = "privatelink.azurewebsites.net"
       resource_group_name = "resource_group_01"
-          link_name       = "private-dns-zone-app-link-vnet-app"
-          virtual_network = "vnet_app"
     }
     private_dns_zone_mysql = {
       dns_zone_name       = "privatelink.mysql.database.azure.com"
       resource_group_name = "resource_group_01"
-          link_name       = "private-dns-zone-mysql-link-vnet-db"
-          virtual_network = "vnet_db"
     }
   }
 }
 
-variable "private_dns_zone_extra_links" {
+variable "private_dns_zones_virtual_network_links" {
   default = {
-    private_dns_zone_acr_link_vnet_app = {
-      link_name        = "private-dns-zone-acr-link-vnet-app"
-      virtual_network  = "vnet_app"
-      private_dns_zone = "private_dns_zone_acr"
+    private-dns-zone-acr-link-vnet-acr = {
+      private_dns_zone_name       = "private_dns_zone_acr"
       resource_group_name = "resource_group_01"
+      virtual_network = "vnet_acr"
     }
-
-    private_dns_zone_acr_link_vnet_hub = {
-      link_name        = "private-dns-zone-acr-link-vnet-hub"
-      virtual_network  = "vnet_hub"
-      private_dns_zone = "private_dns_zone_acr"
+    private-dns-zone-acr-link-vnet-app = {
+      private_dns_zone_name       = "private_dns_zone_acr"
       resource_group_name = "resource_group_01"
+      virtual_network = "vnet_app"
     }
-
-    private_dns_zone_mysql_link_vnet_app = {
-      link_name        = "private-dns-zone-mysql-link-vnet-app"
-      virtual_network  = "vnet_app"
-      private_dns_zone = "private_dns_zone_mysql"
+    private-dns-zone-acr-link-vnet-hub = {
+      private_dns_zone_name      = "private_dns_zone_acr"
       resource_group_name = "resource_group_01"
+      virtual_network = "vnet_hub"
     }
-
-    private_dns_zone_db_link_vnet_hub = {
-      link_name        = "private-dns-zone-mysql-link-vnet-hub"
-      virtual_network  = "vnet_hub"
-      private_dns_zone = "private_dns_zone_mysql"
+    private-dns-zone-app-link-vnet-app = {
+      private_dns_zone_name      = "private_dns_zone_app"
       resource_group_name = "resource_group_01"
+      virtual_network = "vnet_app"
+    }
+    private-dns-zone-mysql-link-vnet-db = {
+      private_dns_zone_name      = "private_dns_zone_mysql"
+      resource_group_name = "resource_group_01"
+      virtual_network = "vnet_db"
+    }
+    private-dns-zone-mysql-link-vnet-app = {
+      private_dns_zone_name       = "private_dns_zone_mysql"
+      resource_group_name = "resource_group_01"
+      virtual_network = "vnet_app"
+    }
+    private-dns-zone-mysql-link-vnet-hub = {
+      private_dns_zone_name       = "private_dns_zone_mysql"
+      resource_group_name = "resource_group_01"
+      virtual_network = "vnet_hub"
     }
   }
 }
-
-# variable "private_dns_zones" {
-#   default = {
-#     private_dns_zone_acr = {
-#       dns_zone_name       = "privatelink.azurecr.io"
-#       resource_group_name = "resource_group_01"
-#       links = [
-#         {
-#           link_name       = "private-dns-zone-acr-link-vnet-acr"
-#           virtual_network = "vnet_acr"
-#         },
-#         {
-#           link_name       = "private-dns-zone-acr-link-vnet-app"
-#           virtual_network = "vnet_app"
-#         },
-#         {
-#           link_name       = "private-dns-zone-acr-link-vnet-hub"
-#           virtual_network = "vnet_hub"
-#         }
-#       ]
-#     }
-#     private_dns_zone_app = {
-#       dns_zone_name       = "privatelink.azurewebsites.net"
-#       resource_group_name = "resource_group_01"
-#       links = [
-#         {
-#           link_name       = "private-dns-zone-app-link-vnet-app"
-#           virtual_network = "vnet_app"
-#         }
-#       ]
-#     }
-#     private_dns_zone_mysql = {
-#       dns_zone_name       = "privatelink.mysql.database.azure.com"
-#       resource_group_name = "resource_group_01"
-#       links = [
-#         {
-#           link_name       = "private-dns-zone-mysql-link-vnet-db"
-#           virtual_network = "vnet_db"
-#         },
-#         {
-#           link_name       = "private-dns-zone-mysql-link-vnet-app"
-#           virtual_network = "vnet_app"
-#         },
-#         {
-#           link_name       = "private-dns-zone-mysql-link-vnet-hub"
-#           virtual_network = "vnet_hub"
-#         }
-#       ]
-#     }
-#   }
-# }
 
 variable "private_endpoints" {
   default = {

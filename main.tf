@@ -6,12 +6,12 @@ terraform {
     }
   }
 
-  # backend "azurerm" {
-  #   resource_group_name  = "coy-backend"
-  #   storage_account_name = "coystorage"
-  #   container_name       = "terraformstate"
-  #   key                  = "terraform.tfstate"
-  # }
+  backend "azurerm" {
+    resource_group_name  = "coy-backend"
+    storage_account_name = "coystorage"
+    container_name       = "terraformstate"
+    key                  = "terraform.tfstate"
+  }
 }
 
 provider "azurerm" {
@@ -37,7 +37,7 @@ module "virtual_networks" {
 }
 
 module "subnets" {
-  source               = "./modules/subnet"
+  source               = "./modules/Subnet"
   for_each             = var.subnets
   resource_group_name  = module.resource_groups["${each.value.resource_group_name}"].name
   virtual_network_name = module.virtual_networks["${each.value.virtual_network_name}"].name
@@ -48,7 +48,7 @@ module "subnets" {
 }
 
 module "vnet_peerings" {
-  source                    = "./modules/vnetpeering"
+  source                    = "./modules/VnetPeering"
   for_each                  = var.vnet_peerings
   resource_group_name       = module.resource_groups["${each.value.resource_group_name}"].name
   name                      = each.value.name
@@ -65,14 +65,13 @@ module "route_tables" {
   location            = module.resource_groups["${each.value.resource_group_name}"].location
   name                = each.value.name
   route               = each.value.routes
-  subnet_id           = module.subnets["${each.value.subnet_name}"].id
 }
 
-module "subnet_route_table_associations" {
-  source         = "./modules/RouteTableExtraAssociation"
-  for_each       = var.subnet_route_table_associations
-  subnet_id      = module.subnets["${each.value.subnet}"].id
-  route_table_id = module.route_tables["${each.value.route_table}"].id
+module "route_table_associations" {
+  source         = "./modules/RouteTableAssociation"
+  for_each = var.route_table_associations
+  route_table_id = module.route_tables[each.value.route_table].id
+  subnet_id = module.subnets[each.value.subnet].id
 }
 
 module "public_ip_addresses" {
@@ -86,7 +85,7 @@ module "public_ip_addresses" {
 }
 
 module "firewalls" {
-  source               = "./modules/AzureFirewall"
+  source               = "./modules/Firewall"
   for_each             = var.firewalls
   location             = module.resource_groups["${each.value.resource_group_name}"].location
   resource_group_name  = module.resource_groups["${each.value.resource_group_name}"].name
@@ -97,7 +96,7 @@ module "firewalls" {
 }
 
 module "firewall_network_rule_collections" {
-  source                 = "./modules/AzureFirewallNetworkRuleCollection"
+  source                 = "./modules/FirewallNetworkRuleCollection"
   for_each               = var.firewall_network_rule_collections
   resource_group_name    = module.resource_groups["${each.value.resource_group_name}"].name
   name                   = each.value.name
@@ -153,7 +152,7 @@ module "key_vault_secrets" {
 }
 
 module "acrs" {
-  source                        = "./modules/AzureContainerRegistry"
+  source                        = "./modules/ContainerRegistry"
   for_each                      = var.acrs
   name                          = each.value.name
   resource_group_name           = module.resource_groups["${each.value.resource_group_name}"].name
@@ -209,18 +208,15 @@ module "private_dns_zones" {
   source = "./modules/PrivateDnsZone"
   for_each = var.private_dns_zones
   resourcegroup = module.resource_groups["${each.value.resource_group_name}"].name
-  name = each.value.dns_zone_name
-  link_name = each.value.link_name
-  virtual_network_id = module.virtual_networks["${each.value.virtual_network}"].id
 }
 
-module "private_dns_zone_extra_links" {
-  source                = "./modules/PrivateDnsZoneExtraLink"
-  for_each              = var.private_dns_zone_extra_links
-  resourcegroup         = module.resource_groups["${each.value.resource_group_name}"].name
-  link_name             = each.value.link_name
-  virtual_network_id    = module.virtual_networks["${each.value.virtual_network}"].id
-  private_dns_zone_name = each.value.private_dns_zone
+module "private_dns_zones_virtual_network_links" {
+  source = "./modules/PrivateDnsZoneVirtualNetworkLink"
+  for_each = var.private_dns_zones_virtual_network_links
+  name = each.key
+  private_dns_zone_name = module.private_dns_zones[each.value.private_dns_zone_name].name
+  resourcegroup = module.resource_groups[each.value.resource_group_name].name
+  virtual_network_id = module.virtual_networks[each.value.virtual_network].id
 }
 
 # module "private_dns_zones" {
@@ -247,6 +243,7 @@ module "mysql_databases" {
   charset             = each.value.charset
   collation           = each.value.collation
   value               = each.value.value
+  depends_on = [ module.private_dns_zones_virtual_network_links ]
 }
 
 module "application_insights" {
@@ -281,7 +278,7 @@ module "app_services" {
 }
 
 module "private_endpoints" {
-  source                 = "./modules/privateendpoint"
+  source                 = "./modules/PrivateEndpoint"
   for_each               = var.private_endpoints
   resourcegroup          = module.resource_groups["${each.value.resource_group_name}"].name
   location               = module.resource_groups["${each.value.resource_group_name}"].location
