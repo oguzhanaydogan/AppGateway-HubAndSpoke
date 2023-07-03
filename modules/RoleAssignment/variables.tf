@@ -1,4 +1,4 @@
-variable "scope" {  
+variable "scope_id" {  
 }
 
 variable "principal_id" {  

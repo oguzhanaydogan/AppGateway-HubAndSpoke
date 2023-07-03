@@ -290,7 +290,7 @@ module "private_endpoints" {
 module "role_assignments" {
   source          = "./modules/RoleAssignment"
   for_each        = var.role_assignments
-  scope           = local.resources["${each.value.scope}"].id
+  scope_id        = local.resources["${each.value.scope}"].id
   principal_id    = local.resources["${each.value.role_owner}"].principal_id
   role_definition = each.value.role_definition
 }

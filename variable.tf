@@ -312,7 +312,6 @@ variable "firewalls" {
     firewall_hub = {
       name                         = "firewall-hub"
       sku_tier                     = "Premium"
-      ip_configuration_name        = "configuration"
       subnet                       = "vnet_hub_subnet_firewall"
       management_subnet            = "vnet_hub_subnet_management"
       management_public_ip_address = "public_ip_hub_firewall_management"
@@ -587,7 +586,7 @@ variable "linux_virtual_machines" {
       custom_data                                             = "/modules/VirtualMachine/vm-custom-agent.sh"
       os_profile_linux_config_disable_password_authentication = true
       ip_configuration_name                                   = "testconfiguration1"
-      ip_configuration_subnet                                 = "vnet_acr_subnet_acr"
+      ip_configuration_subnet                                 = "vnet_agent_subnet_agent"
       ip_configuration_private_ip_address_allocation          = "Dynamic"
       ip_configuration_public_ip_address                      = "public_ip_agent"
       ssh_key_rg                                              = "ssh"
