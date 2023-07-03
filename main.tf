@@ -240,7 +240,7 @@ module "mysql_databases" {
   sku_name            = each.value.sku_name
   charset             = each.value.charset
   collation           = each.value.collation
-  value               = each.value.value
+  require_secure_transport_value = each.value.require_secure_transport_value
   depends_on          = [module.private_dns_zones_virtual_network_links]
 }
 
@@ -282,7 +282,7 @@ module "private_endpoints" {
   location               = module.resource_groups["${each.value.resource_group_name}"].location
   subnet_id              = module.subnets["${each.value.subnet}"].id
   private_dns_zone_ids   = [module.private_dns_zones["${each.value.private_dns_zone}"].id]
-  attached_resource_name = each.value.attached_resource_name
+  attached_resource_name = each.value.attached_resource
   attached_resource_id   = local.resources[each.value.attached_resource].id
   subresource_name       = each.value.subresource_name
 }

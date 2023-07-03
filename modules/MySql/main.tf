@@ -23,5 +23,5 @@ resource "azurerm_mysql_flexible_server_configuration" "require-secure-transport
   name                = "require_secure_transport"
   resource_group_name = var.resourcegroup
   server_name         = azurerm_mysql_flexible_server.mysql.name
-  value               = var.value
+  value               = var.require_secure_transport_value
 } 

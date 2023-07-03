@@ -6,13 +6,13 @@ resource "azurerm_linux_web_app" "webapp" {
   app_settings        = var.app_settings
   virtual_network_subnet_id = var.vnet_integration_subnet
   
-  lifecycle {
-    ignore_changes = [virtual_network_subnet_id]
-  }
-  site_config {
-    container_registry_use_managed_identity = true
-    vnet_route_all_enabled = true
-  }
+  # lifecycle {
+  #   ignore_changes = [virtual_network_subnet_id]
+  # }
+  # site_config {
+  #   container_registry_use_managed_identity = true
+  #   vnet_route_all_enabled = true
+  # }
   identity { 
     type = "SystemAssigned"
   }

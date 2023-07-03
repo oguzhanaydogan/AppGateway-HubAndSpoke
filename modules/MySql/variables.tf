@@ -32,5 +32,5 @@ variable "charset" {
 variable "collation" {
 }
 
-variable "value" {
+variable "require_secure_transport_value" {
 }

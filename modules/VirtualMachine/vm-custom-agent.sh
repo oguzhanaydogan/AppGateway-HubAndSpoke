@@ -10,7 +10,7 @@ apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docke
 systemctl start docker
 systemctl enable docker
 
-usermod -a -G docker 
+usermod -a -G docker azureuser
 
 curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 

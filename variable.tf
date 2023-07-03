@@ -538,7 +538,6 @@ variable "private_dns_zones_virtual_network_links" {
 variable "private_endpoints" {
   default = {
     private_endpoint_acr = {
-      attached_resource_name = "coyhub"
       private_dns_zone       = "private_dns_zone_acr"
       subresource_name       = "registry"
       subnet                 = "vnet_acr_subnet_acr"
@@ -546,7 +545,6 @@ variable "private_endpoints" {
       attached_resource      = "acr_01"
     }
     private_endpoint_app1 = {
-      attached_resource_name = "app_service_01"
       private_dns_zone       = "private_dns_zone_app"
       subresource_name       = "sites"
       subnet                 = "vnet_app_subnet_app1endpoint"
@@ -554,7 +552,6 @@ variable "private_endpoints" {
       attached_resource      = "app_service_01"
     }
     private_endpoint_app2 = {
-      attached_resource_name = "app_service_02"
       private_dns_zone       = "private_dns_zone_app"
       subresource_name       = "sites"
       subnet                 = "vnet_app_subnet_app2endpoint"
@@ -634,7 +631,7 @@ variable "mysql_databases" {
       sku_name              = "B_Standard_B1s"
       charset               = "utf8"
       collation             = "utf8_unicode_ci"
-      value                 = "OFF"
+      require_secure_transport_value = "OFF"
     }
   }
 }
