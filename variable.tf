@@ -176,24 +176,48 @@ variable "vnet_peerings" {
 ### route tables
 variable "route_tables" {
   default = {
-    route_table_01 = {
-      name                = "route-table-01"
+    route_table_subnet_app = {
+      name                = "route-table-subnet-app"
       resource_group_name = "resource_group_01"
       routes = {
-        acr-allow = {
-          name                   = "acr-allow"
+        route_for_subnet_acr = {
+          name                   = "route-for-subnet-acr"
           address_prefix         = "10.1.0.0/24"
           next_hop_type          = "VirtualAppliance"
           next_hop_in_ip_address = "10.3.1.4"
         }
-        db-allow = {
-          name                   = "db-allow"
+        route_for_subnet_db = {
+          name                   = "route-for-subnet-db"
           address_prefix         = "10.2.1.0/26"
           next_hop_type          = "VirtualAppliance"
           next_hop_in_ip_address = "10.3.1.4"
         }
-        webapp-allow = {
-          name                   = "webapp-allow"
+      }
+    }
+    route_table_subnet_db  = {
+      name                = "route-table-subnet-db"
+      resource_group_name = "resource_group_01"
+      routes = {
+        route_for_subnet_app = {
+          name                   = "route-for-subnet-app"
+          address_prefix         = "10.0.1.0/24"
+          next_hop_type          = "VirtualAppliance"
+          next_hop_in_ip_address = "10.3.1.4"
+        }
+      }
+    }
+    route_table_subnet_acr  = {
+      name                = "route-table-subnet-acr"
+      resource_group_name = "resource_group_01"
+      routes = {
+        route_for_subnet_db = {
+          name                   = "route-for-subnet-db"
+          address_prefix         = "10.2.1.0/26"
+          next_hop_type          = "VirtualAppliance"
+          next_hop_in_ip_address = "10.3.1.4"
+        }
+        route_for_subnet_app = {
+          name                   = "route-for-subnet-app"
           address_prefix         = "10.0.1.0/24"
           next_hop_type          = "VirtualAppliance"
           next_hop_in_ip_address = "10.3.1.4"
@@ -207,15 +231,15 @@ variable "route_table_associations" {
   default = {
     vnet_app_subnet_app_01 = {
       subnet      = "vnet_app_subnet_app"
-      route_table = "route_table_01"
+      route_table = "route_table_subnet_app"
     }
     vnet_acr_subnet_acr_01 = {
       subnet      = "vnet_acr_subnet_acr"
-      route_table = "route_table_01"
+      route_table = "route_table_subnet_acr"
     }
     vnet_db_subnet_db_01 = {
       subnet      = "vnet_db_subnet_db"
-      route_table = "route_table_01"
+      route_table = "route_table_subnet_db"
     }
   }
 }
@@ -276,12 +300,6 @@ variable "firewall_network_rule_collections" {
           source_addresses      = ["10.0.1.0/24"]
           destination_ports     = ["*"]
           destination_addresses = ["10.2.1.0/26"]
-          protocols             = ["Any"]
-        }
-        "customagent-acr-rule" = {
-          source_addresses      = ["10.1.0.4/32"]
-          destination_ports     = ["*"]
-          destination_addresses = ["10.1.0.0/24"]
           protocols             = ["Any"]
         }
         "acr-webapp-rule" = {
