@@ -11,11 +11,11 @@ locals {
   #     for link in v.links : link.link_name => module.virtual_networks[link.virtual_network].id
   #   }
   # }
-  
+
   backend_address_pools = {
     for k, v in var.application_gateways : k => {
       for pool in v.backend_address_pools : pool.name => [
-          for resource in pool.resources : local.resources[resource].fqdn
+        for resource in pool.resources : local.resources[resource].fqdn
       ]
     }
   }
@@ -27,6 +27,5 @@ locals {
   #   }
   # }
 }
-
 
 

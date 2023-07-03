@@ -13,6 +13,6 @@ resource "azurerm_firewall_network_rule_collection" "example" {
         destination_ports = rule.value.destination_ports
         destination_addresses = rule.value.destination_addresses
         protocols = rule.value.protocols
-    }    
+    }     
   }
 }

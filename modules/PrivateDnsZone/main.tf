@@ -10,4 +10,4 @@ resource "azurerm_private_dns_zone" "private_dns_zone" {
 #   private_dns_zone_name = azurerm_private_dns_zone.private_dns_zone.name
 #   resource_group_name   = var.resourcegroup
 #   virtual_network_id    = each.value
-# }
+# } 

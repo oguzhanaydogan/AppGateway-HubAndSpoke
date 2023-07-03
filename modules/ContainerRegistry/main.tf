@@ -6,4 +6,4 @@ resource "azurerm_container_registry" "acr" {
   sku                           = var.sku
   public_network_access_enabled = var.public_network_access_enabled
   network_rule_bypass_option    = var.network_rule_bypass_option
-}
+} 

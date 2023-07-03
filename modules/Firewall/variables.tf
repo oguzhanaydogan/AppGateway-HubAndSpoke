@@ -13,5 +13,8 @@ variable "sku_tier" {
 variable "subnet_id" {  
 }
 
-variable "public_ip_address_id" {  
+variable "management_public_ip_address_id" {  
+}
+
+variable "management_subnet_id" {  
 }

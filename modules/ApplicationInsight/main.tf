@@ -3,4 +3,4 @@ resource "azurerm_application_insights" "insight" {
   location            = var.location
   resource_group_name = var.resourcegroup
   application_type    = var.application_type
-}
+} 

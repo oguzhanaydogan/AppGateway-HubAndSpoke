@@ -13,7 +13,7 @@ resource "azurerm_virtual_machine" "vm1" {
       type         = var.vm_identity_type
     }
   }
-
+ 
     storage_image_reference {
     publisher = var.storage_image_reference_publisher
     offer     = var.storage_image_reference_offer

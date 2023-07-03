@@ -12,4 +12,4 @@ resource "azurerm_route_table" "routetable" {
         next_hop_in_ip_address = route.value.next_hop_in_ip_address   
     }
   }
-}
+} 

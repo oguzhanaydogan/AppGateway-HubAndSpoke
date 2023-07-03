@@ -13,7 +13,7 @@ resource "azurerm_linux_web_app" "webapp" {
     container_registry_use_managed_identity = true
     vnet_route_all_enabled = true
   }
-  identity {
+  identity { 
     type = "SystemAssigned"
   }
 }

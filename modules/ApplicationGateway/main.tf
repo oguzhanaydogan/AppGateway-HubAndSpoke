@@ -2,7 +2,7 @@ resource "azurerm_application_gateway" "appgw" {
   name                = var.name
   resource_group_name = var.resourcegroup
   location            = var.location
-
+ 
   sku {
     name     = var.sku_name
     tier     = var.sku_tier

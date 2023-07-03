@@ -7,3 +7,4 @@ data "azurerm_key_vault_secret" "secret" {
   name         = var.secret
   key_vault_id = data.azurerm_key_vault.example.id
 }
+ 

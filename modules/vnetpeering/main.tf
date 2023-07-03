@@ -4,4 +4,4 @@ resource "azurerm_virtual_network_peering" "vnet_peering" {
   virtual_network_name      = var.virtual_network_name
   remote_virtual_network_id = var.remote_virtual_network_id
   allow_forwarded_traffic = true
-}
+} 

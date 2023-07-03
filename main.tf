@@ -15,7 +15,11 @@ terraform {
 }
 
 provider "azurerm" {
-  features {}
+  features {
+    resource_group {
+      prevent_deletion_if_contains_resources = false
+    }
+  }
   skip_provider_registration = true
 }
 
@@ -69,9 +73,9 @@ module "route_tables" {
 
 module "route_table_associations" {
   source         = "./modules/RouteTableAssociation"
-  for_each = var.route_table_associations
+  for_each       = var.route_table_associations
   route_table_id = module.route_tables[each.value.route_table].id
-  subnet_id = module.subnets[each.value.subnet].id
+  subnet_id      = module.subnets[each.value.subnet].id
 }
 
 module "public_ip_addresses" {
@@ -85,14 +89,15 @@ module "public_ip_addresses" {
 }
 
 module "firewalls" {
-  source               = "./modules/Firewall"
-  for_each             = var.firewalls
-  location             = module.resource_groups["${each.value.resource_group_name}"].location
-  resource_group_name  = module.resource_groups["${each.value.resource_group_name}"].name
-  name                 = each.value.name
-  sku_tier             = each.value.sku_tier
-  subnet_id            = module.subnets["${each.value.subnet}"].id
-  public_ip_address_id = module.public_ip_addresses["${each.value.public_ip_address}"].id
+  source                          = "./modules/Firewall"
+  for_each                        = var.firewalls
+  location                        = module.resource_groups["${each.value.resource_group_name}"].location
+  resource_group_name             = module.resource_groups["${each.value.resource_group_name}"].name
+  name                            = each.value.name
+  sku_tier                        = each.value.sku_tier
+  subnet_id                       = module.subnets["${each.value.subnet}"].id
+  management_subnet_id            = module.subnets["${each.value.management_subnet}"].id
+  management_public_ip_address_id = module.public_ip_addresses["${each.value.management_public_ip_address}"].id
 }
 
 module "firewall_network_rule_collections" {
@@ -205,27 +210,20 @@ module "linux_virtual_machines" {
 }
 
 module "private_dns_zones" {
-  source = "./modules/PrivateDnsZone"
-  for_each = var.private_dns_zones
+  source        = "./modules/PrivateDnsZone"
+  for_each      = var.private_dns_zones
+  name          = each.value.dns_zone_name
   resourcegroup = module.resource_groups["${each.value.resource_group_name}"].name
 }
 
 module "private_dns_zones_virtual_network_links" {
-  source = "./modules/PrivateDnsZoneVirtualNetworkLink"
-  for_each = var.private_dns_zones_virtual_network_links
-  name = each.key
+  source                = "./modules/PrivateDnsZoneVirtualNetworkLink"
+  for_each              = var.private_dns_zones_virtual_network_links
+  name                  = each.key
   private_dns_zone_name = module.private_dns_zones[each.value.private_dns_zone_name].name
-  resourcegroup = module.resource_groups[each.value.resource_group_name].name
-  virtual_network_id = module.virtual_networks[each.value.virtual_network].id
+  resourcegroup         = module.resource_groups[each.value.resource_group_name].name
+  virtual_network_id    = module.virtual_networks[each.value.virtual_network].id
 }
-
-# module "private_dns_zones" {
-#   source        = "./modules/PrivateDnsZone"
-#   for_each      = var.private_dns_zones
-#   name          = each.value.dns_zone_name
-#   resourcegroup = module.resource_groups["${each.value.resource_group_name}"].name
-#   links         = local.private_dns_zone_links[each.key]
-# }
 
 module "mysql_databases" {
   source              = "./modules/MySql"
@@ -243,7 +241,7 @@ module "mysql_databases" {
   charset             = each.value.charset
   collation           = each.value.collation
   value               = each.value.value
-  depends_on = [ module.private_dns_zones_virtual_network_links ]
+  depends_on          = [module.private_dns_zones_virtual_network_links]
 }
 
 module "application_insights" {
