@@ -226,22 +226,22 @@ module "private_dns_zones_virtual_network_links" {
 }
 
 module "mysql_databases" {
-  source              = "./modules/MySql"
-  for_each            = var.mysql_databases
-  location            = module.resource_groups["${each.value.resource_group_name}"].location
-  resourcegroup       = module.resource_groups["${each.value.resource_group_name}"].name
-  server_name         = each.value.server_name
-  db_name             = each.value.db_name
-  admin_username      = each.value.admin_username
-  admin_password      = module.key_vault_secrets["${each.value.admin_password_secret}"].value
-  delegated_subnet_id = module.subnets["${each.value.delegated_subnet}"].id
-  private_dns_zone_id = module.private_dns_zones["${each.value.private_dns_zone}"].id
-  zone                = each.value.zone
-  sku_name            = each.value.sku_name
-  charset             = each.value.charset
-  collation           = each.value.collation
+  source                         = "./modules/MySql"
+  for_each                       = var.mysql_databases
+  location                       = module.resource_groups["${each.value.resource_group_name}"].location
+  resourcegroup                  = module.resource_groups["${each.value.resource_group_name}"].name
+  server_name                    = each.value.server_name
+  db_name                        = each.value.db_name
+  admin_username                 = each.value.admin_username
+  admin_password                 = module.key_vault_secrets["${each.value.admin_password_secret}"].value
+  delegated_subnet_id            = module.subnets["${each.value.delegated_subnet}"].id
+  private_dns_zone_id            = module.private_dns_zones["${each.value.private_dns_zone}"].id
+  zone                           = each.value.zone
+  sku_name                       = each.value.sku_name
+  charset                        = each.value.charset
+  collation                      = each.value.collation
   require_secure_transport_value = each.value.require_secure_transport_value
-  depends_on          = [module.private_dns_zones_virtual_network_links]
+  depends_on                     = [module.private_dns_zones_virtual_network_links]
 }
 
 module "application_insights" {
@@ -263,15 +263,15 @@ module "app_services" {
   service_plan_id         = module.app_service_plans["${each.value.app_service_plan}"].id
   vnet_integration_subnet = module.subnets["${each.value.vnet_integration_subnet}"].id
   app_settings = {
-    APPINSIGHTS_INSTRUMENTATIONKEY             = each.value.application_insights_enabled ? module.application_insights["${each.value.application_insight}"].instrumentation_key : ""
-    APPLICATIONINSIGHTS_CONNECTION_STRING      = each.value.application_insights_enabled ? module.application_insights["${each.value.application_insight}"].connection_string : ""
-    ApplicationInsightsAgent_EXTENSION_VERSION = "~3"
-    "MYSQL_PASSWORD"                           = "@Microsoft.KeyVault(SecretUri=${module.key_vault_secrets["${each.value.mysql_password_secret}"].id})"
-    "MYSQL_DATABASE_HOST"                      = module.mysql_databases["${each.value.mysql_database}"].host
-    "MYSQL_DATABASE"                           = module.mysql_databases["${each.value.mysql_database}"].database_name
-    "MYSQL_USER"                               = module.mysql_databases["${each.value.mysql_database}"].database_username
-    "DOCKER_REGISTRY_SERVER_URL"               = module.acrs["${each.value.acr}"].fqdn
-    "WEBSITE_PULL_IMAGE_OVER_VNET"             = true
+    "APPINSIGHTS_INSTRUMENTATIONKEY"             = each.value.application_insights_enabled ? module.application_insights["${each.value.application_insight}"].instrumentation_key : ""
+    "APPLICATIONINSIGHTS_CONNECTION_STRING"      = each.value.application_insights_enabled ? module.application_insights["${each.value.application_insight}"].connection_string : ""
+    "ApplicationInsightsAgent_EXTENSION_VERSION" = each.value.application_insights_enabled ? "~3" : ""
+    "MYSQL_PASSWORD"                             = "@Microsoft.KeyVault(SecretUri=${module.key_vault_secrets["${each.value.mysql_password_secret}"].id})"
+    "MYSQL_DATABASE_HOST"                        = module.mysql_databases["${each.value.mysql_database}"].host
+    "MYSQL_DATABASE"                             = module.mysql_databases["${each.value.mysql_database}"].database_name
+    "MYSQL_USER"                                 = module.mysql_databases["${each.value.mysql_database}"].database_username
+    "DOCKER_REGISTRY_SERVER_URL"                 = module.acrs["${each.value.acr}"].fqdn
+    "WEBSITE_PULL_IMAGE_OVER_VNET"               = true
   }
 }
 

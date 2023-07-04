@@ -538,25 +538,25 @@ variable "private_dns_zones_virtual_network_links" {
 variable "private_endpoints" {
   default = {
     private_endpoint_acr = {
-      private_dns_zone       = "private_dns_zone_acr"
-      subresource_name       = "registry"
-      subnet                 = "vnet_acr_subnet_acr"
-      resource_group_name    = "resource_group_01"
-      attached_resource      = "acr_01"
+      private_dns_zone    = "private_dns_zone_acr"
+      subresource_name    = "registry"
+      subnet              = "vnet_acr_subnet_acr"
+      resource_group_name = "resource_group_01"
+      attached_resource   = "acr_01"
     }
     private_endpoint_app1 = {
-      private_dns_zone       = "private_dns_zone_app"
-      subresource_name       = "sites"
-      subnet                 = "vnet_app_subnet_app1endpoint"
-      resource_group_name    = "resource_group_01"
-      attached_resource      = "app_service_01"
+      private_dns_zone    = "private_dns_zone_app"
+      subresource_name    = "sites"
+      subnet              = "vnet_app_subnet_app1endpoint"
+      resource_group_name = "resource_group_01"
+      attached_resource   = "app_service_01"
     }
     private_endpoint_app2 = {
-      private_dns_zone       = "private_dns_zone_app"
-      subresource_name       = "sites"
-      subnet                 = "vnet_app_subnet_app2endpoint"
-      resource_group_name    = "resource_group_01"
-      attached_resource      = "app_service_02"
+      private_dns_zone    = "private_dns_zone_app"
+      subresource_name    = "sites"
+      subnet              = "vnet_app_subnet_app2endpoint"
+      resource_group_name = "resource_group_01"
+      attached_resource   = "app_service_02"
     }
   }
 }
@@ -620,17 +620,17 @@ variable "mysql_databases" {
   default = {
 
     mysql_database_01 = {
-      resource_group_name   = "resource_group_01"
-      server_name           = "coy-database-server2"
-      db_name               = "phonebook"
-      admin_username        = "coyadmin"
-      admin_password_secret = "key_vault_secret_mysql_password"
-      delegated_subnet      = "vnet_db_subnet_db"
-      private_dns_zone      = "private_dns_zone_mysql"
-      zone                  = "1"
-      sku_name              = "B_Standard_B1s"
-      charset               = "utf8"
-      collation             = "utf8_unicode_ci"
+      resource_group_name            = "resource_group_01"
+      server_name                    = "coy-database-server2"
+      db_name                        = "phonebook"
+      admin_username                 = "coyadmin"
+      admin_password_secret          = "key_vault_secret_mysql_password"
+      delegated_subnet               = "vnet_db_subnet_db"
+      private_dns_zone               = "private_dns_zone_mysql"
+      zone                           = "1"
+      sku_name                       = "B_Standard_B1s"
+      charset                        = "utf8"
+      collation                      = "utf8_unicode_ci"
       require_secure_transport_value = "OFF"
     }
   }
